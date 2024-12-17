@@ -1,0 +1,44 @@
+name: .NET 8 CI with NUnit
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up .NET 8 SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x' # Use .NET 8
+
+      # Step 3: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Step 4: Build the solution
+      - name: Build Project
+        run: dotnet build --configuration Release
+
+      # Step 5: Run NUnit unit tests
+      - name: Run Tests
+        run: dotnet test --configuration Release
+        
+      # Step 6: Upload NUnit test results
+      - name: Upload test results
+        if: always() # Always upload results, even if tests fail
+        uses: actions/upload-artifact@v3
+        with:
+          name: nunit-test-results
+          path: test-results.xml
