@@ -1,8 +1,6 @@
 ﻿using Application.Helpers;
-using BCrypt.Net;
 using Domain;
 using Domain.RepositoryInterface;
-using Infrastructure.Database;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -26,11 +24,12 @@ namespace Application.Commands.LoginUser
             try
             {
                 var user = await database.GetFirstOrDefaultAsync(u => u.UserName == UserName, cancellationToken);
-                if (user == null) 
+                if (user == null)
                 {
                     return OperationResult<string>.FailureResult("User not found", logger);
                 }
-                if (user == null || !BCrypt.Net.BCrypt.Verify(UserPass, user.UserPass)) {
+                if (user == null || !BCrypt.Net.BCrypt.Verify(UserPass, user.UserPass))
+                {
                     return OperationResult<string>.FailureResult("Invalid password", logger);
                 }
                 return OperationResult<string>.SuccessResult(tokenHelper.GenerateToken(user), logger);

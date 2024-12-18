@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Domain.RepositoryInterface;
+﻿using Domain.RepositoryInterface;
 using Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository
@@ -26,6 +24,10 @@ namespace Infrastructure.Repository
         public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _dbSet.ToListAsync(cancellationToken); // Pass the cancellationToken to ToListAsync
+        }
+        public async Task<IEnumerable<T>> GetPageAsync(int skip, int take, CancellationToken cancellationToken)
+        {
+            return await _dbSet.Skip(skip).Take(take).ToListAsync(cancellationToken); // Pass the cancellationToken to ToListAsync
         }
 
         public async Task AddAsync(T item, CancellationToken cancellationToken)

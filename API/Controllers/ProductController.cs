@@ -1,7 +1,6 @@
 ﻿using Application.Commands.AddAuthor;
 using Application.Commands.DeleteAuthor;
-using Application.Commands.UpdateAuthor;
-using Application.DTOs;
+using Application.Commands.UpdateProduct;
 using Application.Queries.GetAllAuthors;
 using Application.Queries.GetAuthorById;
 using Domain;
@@ -16,32 +15,32 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorsController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly IMediator mediatr;
 
-        public AuthorsController(IMediator mediatr)
+        public ProductsController(IMediator mediatr)
         {
             this.mediatr = mediatr;
         }
 
         [HttpGet]
-        [Route("GetAuthors")]
-        public async Task<IActionResult> GetAllAuthors()
+        [Route("GetProducts")]
+        public async Task<IActionResult> GetAllProducts()
         {
-            return Ok(await mediatr.Send(new GetAllAuthorsQuery()));
+            return Ok(await mediatr.Send(new GetAllProductsQuery()));
         }
 
         [HttpGet]
-        [Route("GetAuthorById/{id}")]
-        public async Task<IActionResult> GetAuthorById(int id)
+        [Route("GetProductById/{id}")]
+        public async Task<IActionResult> GetProductById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid author ID.");
             }
 
-            var result = await mediatr.Send(new GetAuthorByIdQuery(id));
+            var result = await mediatr.Send(new GetProductByIdQuery(id));
             if (result == null)
             {
                 return NotFound($"No author found with ID {id}.");
@@ -52,22 +51,22 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("AddAuthor")]
-        public async Task<IActionResult> AddAuthor([FromBody] NewAuthorDTO value)
+        [Route("AddProduct")]
+        public async Task<IActionResult> AddProduct([FromBody] Product value)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await mediatr.Send(new AddAuthorCommand(value));
+            var result = await mediatr.Send(new AddProductCommand(value));
             return Ok(result);
         }
 
         [Authorize]
         [HttpPut]
-        [Route("UpdateAuthor/{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, [FromBody] Author value)
+        [Route("UpdateProduct/{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product value)
         {
             if (!ModelState.IsValid)
             {
@@ -79,7 +78,7 @@ namespace API.Controllers
                 return BadRequest("Invalid author ID.");
             }
 
-            var result = await mediatr.Send(new UpdateAuthorByIdCommand(value, id));
+            var result = await mediatr.Send(new UpdateProductByIdCommand(value, id));
             if (result == null)
             {
                 return NotFound($"No author found with ID {id}.");
@@ -90,15 +89,15 @@ namespace API.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("DeleteAuthor/{id}")]
-        public async Task<IActionResult> DeleteAuthorById(int id)
+        [Route("DeleteProduct/{id}")]
+        public async Task<IActionResult> DeleteProductById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Invalid author ID.");
             }
 
-            var result = await mediatr.Send(new DeleteAuthorByIdCommand(id));
+            var result = await mediatr.Send(new DeleteProductByIdCommand(id));
             if (result == null)
             {
                 return NotFound($"No author found with ID {id}.");

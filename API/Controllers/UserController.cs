@@ -1,9 +1,7 @@
 ﻿using Application.Commands.AddUser;
 using Application.Commands.LoginUser;
 using Application.DTOs;
-using Domain;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

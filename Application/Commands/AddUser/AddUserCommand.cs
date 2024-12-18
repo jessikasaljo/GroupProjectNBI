@@ -1,6 +1,5 @@
 ﻿using Application.DTOs;
 using Application.Helpers;
-using Domain;
 using MediatR;
 
 namespace Application.Commands.AddUser

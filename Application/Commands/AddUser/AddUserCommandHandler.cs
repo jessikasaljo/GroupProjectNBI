@@ -1,8 +1,6 @@
 ﻿using Application.Helpers;
-using BCrypt.Net;
 using Domain;
 using Domain.RepositoryInterface;
-using Infrastructure.Database;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

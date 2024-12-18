@@ -3,10 +3,10 @@ using MediatR;
 
 namespace Application.Commands.DeleteAuthor
 {
-    public class DeleteAuthorByIdCommand : IRequest<OperationResult<string>>
+    public class DeleteProductByIdCommand : IRequest<OperationResult<string>>
     {
         public int Id { get; set; }
-        public DeleteAuthorByIdCommand(int id)
+        public DeleteProductByIdCommand(int id)
         {
             Id = id;
         }
