@@ -17,6 +17,15 @@ namespace Application.Helpers
         public string GenerateToken(User user)
         {
             var key = Encoding.ASCII.GetBytes(s: _configuration["JwtSettings:SecretKey"]!);
+            var role = user.Role switch
+            {
+                UserRole.Customer => "customer",
+                UserRole.StoreAdmin => "storeAdmin",
+                UserRole.ProductAdmin => "productAdmin",
+                _ => throw new Exception("Invalid Role")
+            };
+
+
 
             var tokenDescripter = new SecurityTokenDescriptor
             {
@@ -24,7 +33,7 @@ namespace Application.Helpers
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role,"Admin")
+                    new Claim(ClaimTypes.Role, role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

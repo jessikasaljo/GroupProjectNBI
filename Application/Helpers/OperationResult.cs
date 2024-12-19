@@ -5,9 +5,9 @@ namespace Application.Helpers
     public class OperationResult<T>
     {
         public bool Success { get; set; }
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
         public T? Data { get; set; }
-        public IEnumerable<string> ValidationErrors { get; set; }
+        public IEnumerable<string>? ValidationErrors { get; set; }
         public int StatusCode { get; set; }
 
         public static OperationResult<T> SuccessResult(T data, ILogger logger)

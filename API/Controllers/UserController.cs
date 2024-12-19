@@ -1,6 +1,7 @@
 ﻿using Application.Commands.AddUser;
 using Application.Commands.LoginUser;
 using Application.DTOs;
+using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +45,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("AddUser")]
-        public async Task<IActionResult> AddUser([FromBody] UserDTO value)
+        public async Task<IActionResult> AddUser([FromBody] AddUserDTO value)
         {
             if (!ModelState.IsValid)
             {
@@ -57,7 +58,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("LoginUser")]
-        public async Task<IActionResult> LoginUser([FromBody] UserDTO value)
+        public async Task<IActionResult> LoginUser([FromBody] LoginUserDTO value)
         {
             if (!ModelState.IsValid)
             {

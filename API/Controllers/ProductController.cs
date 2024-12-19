@@ -1,6 +1,7 @@
 ﻿using Application.Commands.AddAuthor;
 using Application.Commands.DeleteAuthor;
 using Application.Commands.UpdateProduct;
+using Application.DTOs;
 using Application.Queries.GetAllAuthors;
 using Application.Queries.GetAuthorById;
 using Domain;
@@ -49,10 +50,10 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = "productAdmin")]
         [HttpPost]
         [Route("AddProduct")]
-        public async Task<IActionResult> AddProduct([FromBody] Product value)
+        public async Task<IActionResult> AddProduct([FromBody] AddProductDTO value)
         {
             if (!ModelState.IsValid)
             {
@@ -63,7 +64,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = "productAdmin")]
         [HttpPut]
         [Route("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product value)
@@ -87,7 +88,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = "productAdmin")]
         [HttpDelete]
         [Route("DeleteProduct/{id}")]
         public async Task<IActionResult> DeleteProductById(int id)

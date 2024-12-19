@@ -1,19 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain
+namespace Application.DTOs
 {
-    public enum UserRole
+    public class AddUserDTO
     {
-        Customer = 0,
-        StoreAdmin = 1,
-        ProductAdmin = 2
-    }
-
-    public class User
-    {
-        [Key]
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Username is required.")]
         [StringLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
         public required string UserName { get; set; }
@@ -39,8 +35,5 @@ namespace Domain
 
         [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters.")]
         public string? Address { get; set; }
-
-        [Range(0, 2, ErrorMessage = "Admin level must be between 0 and 2")]
-        public UserRole Role { get; set; } = UserRole.Customer;
     }
 }

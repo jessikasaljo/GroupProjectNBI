@@ -20,7 +20,13 @@ namespace Application.Commands.AddUser
             User userToCreate = new()
             {
                 UserName = request.newUser.UserName,
-                UserPass = BCrypt.Net.BCrypt.HashPassword(request.newUser.UserPass)
+                UserPass = BCrypt.Net.BCrypt.HashPassword(request.newUser.UserPass),
+                Email = request.newUser.Email,
+                FirstName = request.newUser.FirstName,
+                LastName = request.newUser.LastName,
+                Phone = request.newUser.Phone,
+                Address = request.newUser.Address,
+                Role = 0
             };
             User? existingUser = null;
             try

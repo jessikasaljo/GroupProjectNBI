@@ -26,7 +26,7 @@ namespace Application.Queries.GetAllAuthors
             var cacheKey = $"Products_p{page}_s{size}";
             try
             {
-                if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<Product> products))
+                if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<Product>? products))
                 {
                     products = await database.GetPageAsync(page, size, cancellationToken);
                     memoryCache.Set(cacheKey, products, TimeSpan.FromMinutes(5));
