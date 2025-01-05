@@ -1,9 +1,9 @@
-﻿using Application.Commands.AddAuthor;
-using Application.Commands.DeleteAuthor;
-using Application.Commands.UpdateProduct;
+﻿using Application.Commands.ProductCommands.AddProduct;
+using Application.Commands.ProductCommands.DeleteProduct;
+using Application.Commands.ProductCommands.UpdateProduct;
 using Application.DTOs.Product;
-using Application.Queries.GetAllAuthors;
-using Application.Queries.GetAuthorById;
+using Application.Queries.ProductQueries.GetAllProducts;
+using Application.Queries.ProductQueries.GetProductById;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
