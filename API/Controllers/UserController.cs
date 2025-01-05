@@ -1,6 +1,6 @@
 ﻿using Application.Commands.AddUser;
 using Application.Commands.LoginUser;
-using Application.DTOs;
+using Application.DTOs.User;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
