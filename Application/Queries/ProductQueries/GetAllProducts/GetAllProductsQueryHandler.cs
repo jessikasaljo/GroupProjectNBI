@@ -20,8 +20,8 @@ namespace Application.Queries.ProductQueries.GetAllProducts
         }
         public async Task<OperationResult<IEnumerable<Product>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            var page = request.PageNumber;
-            var size = request.PageSize;
+            var page = request.Page;
+            var size = request.Hits;
 
             var cacheKey = $"Products_p{page}_s{size}";
             try
@@ -29,7 +29,7 @@ namespace Application.Queries.ProductQueries.GetAllProducts
                 if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<Product>? products))
                 {
                     products = await database.GetPageAsync(page, size, cancellationToken);
-                    memoryCache.Set(cacheKey, products, TimeSpan.FromMinutes(5));
+                    memoryCache.Set(cacheKey, products, TimeSpan.FromMinutes(1));
                     logger.LogInformation($"Cache miss. Fetched products for page:{page} with size:{size} from database and cached at {DateTime.UtcNow}");
                 }
                 else
