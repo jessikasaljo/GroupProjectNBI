@@ -27,9 +27,9 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("GetProducts")]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductsQuery query)
         {
-            return Ok(await mediatr.Send(new GetAllProductsQuery()));
+            return Ok(await mediatr.Send(query));
         }
 
         [HttpGet]

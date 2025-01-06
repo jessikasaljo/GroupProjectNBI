@@ -6,7 +6,7 @@ namespace Application.Queries.ProductQueries.GetAllProducts
 {
     public class GetAllProductsQuery : IRequest<OperationResult<IEnumerable<Product>>>
     {
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public int Page { get; set; } = 1;
+        public int Hits { get; set; } = 10;
     }
 }

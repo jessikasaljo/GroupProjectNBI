@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.Product;
+using Application.Helpers;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -7,28 +8,33 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.ProductQueries.GetProductById
 {
-    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, OperationResult<Product?>>
+    public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, OperationResult<FullProductDTO?>>
     {
         private readonly IGenericRepository<Product> Database;
+        private readonly IGenericRepository<ProductDetail> ProductDetailRepository;
         private readonly ILogger<GetProductByIdQueryHandler> logger;
         private readonly IMemoryCache memoryCache;
 
-        public GetProductByIdQueryHandler(IGenericRepository<Product> _Database, ILogger<GetProductByIdQueryHandler> _logger, IMemoryCache _memoryCache)
+        public GetProductByIdQueryHandler(IGenericRepository<Product> _Database, IGenericRepository<ProductDetail> _DetailDatabase, ILogger<GetProductByIdQueryHandler> _logger, IMemoryCache _memoryCache)
         {
             Database = _Database;
+            ProductDetailRepository = _DetailDatabase;
             logger = _logger;
             memoryCache = _memoryCache;
         }
 
-        public async Task<OperationResult<Product?>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<FullProductDTO?>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             var cacheKey = $"Product_{request.Id}";
 
             try
             {
-                if (!memoryCache.TryGetValue(cacheKey, out Product? product))
+                if (!memoryCache.TryGetValue(cacheKey, out FullProductDTO? product))
                 {
-                    product = await Database.GetByIdAsync(request.Id, cancellationToken);
+
+                    var productBase = await Database.GetByIdAsync(request.Id, cancellationToken);
+                    var productDetail = await ProductDetailRepository.GetByIdAsync(request.Id, cancellationToken);
+                    product = new FullProductDTO(productBase, productDetail);
 
                     if (product != null)
                     {
@@ -43,14 +49,14 @@ namespace Application.Queries.ProductQueries.GetProductById
 
                 if (product == null)
                 {
-                    return OperationResult<Product?>.FailureResult("Product not found", logger);
+                    return OperationResult<FullProductDTO?>.FailureResult("Product not found", logger);
                 }
 
-                return OperationResult<Product?>.SuccessResult(product, logger);
+                return OperationResult<FullProductDTO?>.SuccessResult(product, logger);
             }
             catch (Exception exception)
             {
-                return OperationResult<Product?>.FailureResult($"Error occurred while getting product: {exception.Message}", logger);
+                return OperationResult<FullProductDTO?>.FailureResult($"Error occurred while getting product: {exception.Message}", logger);
             }
         }
     }
