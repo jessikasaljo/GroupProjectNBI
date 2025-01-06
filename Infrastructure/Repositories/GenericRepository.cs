@@ -7,10 +7,10 @@ namespace Infrastructure.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly RealDatabase _context;
+        private readonly DatabaseContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(RealDatabase context)
+        public GenericRepository(DatabaseContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();

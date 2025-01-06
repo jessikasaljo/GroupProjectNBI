@@ -10,10 +10,9 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
         {
-            //Console.WriteLine(connectionString);
-            //services.AddSingleton<IDatabase, MockDatabase>();
+            
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddDbContext<RealDatabase>(options =>
+            services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseSqlServer(connectionString);
             });

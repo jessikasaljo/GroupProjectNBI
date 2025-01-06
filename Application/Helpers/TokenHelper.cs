@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,39 +11,35 @@ namespace Application.Helpers
     public class TokenHelper
     {
         IConfiguration _configuration;
-        public TokenHelper(IConfiguration configuration)
+        private readonly UserManager<User> _userManager;
+        public TokenHelper(IConfiguration configuration, UserManager<User> userManager)
         {
             _configuration = configuration;
+            _userManager = userManager;
         }
-        public string GenerateToken(User user)
+        public async Task<string> GenerateJwtTokenAsync(User user)
         {
-            var key = Encoding.ASCII.GetBytes(s: _configuration["JwtSettings:SecretKey"]!);
-            var role = user.Role switch
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new List<Claim>();
+
+            foreach (var role in roles)
             {
-                UserRole.Customer => "customer",
-                UserRole.StoreAdmin => "storeAdmin",
-                UserRole.ProductAdmin => "productAdmin",
-                _ => throw new Exception("Invalid Role")
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
+            claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: creds);
 
-            var tokenDescripter = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, role)
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescripter);
-
-            return tokenHandler.WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
     }
 }

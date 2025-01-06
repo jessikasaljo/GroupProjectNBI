@@ -3,47 +3,44 @@ using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
+using FluentValidation;
 
 namespace Application.Commands.UserCommands.AddUser
 {
     public class AddUserCommandHandler : IRequestHandler<AddUserCommand, OperationResult<string>>
     {
-        private readonly IGenericRepository<User> Database;
-        private readonly ILogger<AddUserCommandHandler> logger;
-        public AddUserCommandHandler(IGenericRepository<User> _Database, ILogger<AddUserCommandHandler> _logger)
+        private readonly IGenericRepository<User> _userRepository;
+        private readonly ILogger<AddUserCommandHandler> _logger;
+        private readonly IMapper _mapper;
+        private readonly AddUserCommandValidator _validator;
+
+        public AddUserCommandHandler(IGenericRepository<User> userRepository, ILogger<AddUserCommandHandler> logger, IMapper mapper, AddUserCommandValidator validator)
         {
-            Database = _Database;
-            logger = _logger;
+            _userRepository = userRepository;
+            _logger = logger;
+            _mapper = mapper;
+            _validator = validator;
         }
+
         public async Task<OperationResult<string>> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            User userToCreate = new()
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                UserName = request.newUser.UserName,
-                UserPass = BCrypt.Net.BCrypt.HashPassword(request.newUser.UserPass),
-                Email = request.newUser.Email,
-                FirstName = request.newUser.FirstName,
-                LastName = request.newUser.LastName,
-                Phone = request.newUser.Phone,
-                Address = request.newUser.Address,
-                Role = 0
-            };
-            User? existingUser = null;
-            try
-            {
-                existingUser = await Database.GetFirstOrDefaultAsync(u => u.UserName == userToCreate.UserName, cancellationToken);
-                if (existingUser != null)
-                {
-                    return OperationResult<string>.FailureResult("User already exists", logger);
-                }
+                return OperationResult<string>.FailureResult(validationResult.Errors.Select(x => x.ErrorMessage).ToList(), _logger);
+            }
 
-                await Database.AddAsync(userToCreate, cancellationToken);
-                return OperationResult<string>.SuccessResult("User added successfully", logger);
-            }
-            catch (Exception exception)
+            var userToCreate = _mapper.Map<User>(request.newUser);
+
+            var existingUser = await _userRepository.GetFirstOrDefaultAsync(u => u.UserName == userToCreate.UserName, cancellationToken);
+            if (existingUser != null)
             {
-                return OperationResult<string>.FailureResult($"Error occurred while checking user: {exception.Message}", logger);
+                return OperationResult<string>.FailureResult("User already exists", _logger);
             }
+
+            await _userRepository.AddAsync(userToCreate, cancellationToken);
+            return OperationResult<string>.SuccessResult("User added successfully", _logger);
         }
     }
 }
