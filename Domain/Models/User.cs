@@ -9,7 +9,6 @@ namespace Domain.Models
         ProductAdmin = 2
     }
 
-    //Hej hej
     public class User
     {
         [Key]
