@@ -9,7 +9,7 @@ namespace Infrastructure.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductDetail> ProductDetail { get; set; }
-        //public DbSet<Author> Authors { get; set; }
-        //public DbSet<Book> Books { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        
     }
 }
