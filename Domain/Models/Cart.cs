@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Models
 {
     public class Cart
@@ -15,5 +16,14 @@ namespace Domain.Models
         // List of products in the cart with quantity
         public List<CartItem> Items { get; set; } = new();
 
+        // Calculated field for the total price of the cart
+        [NotMapped]
+        public decimal TotalPrice
+        {
+            get
+            {
+                return Items.Sum(item => item.Product.Price * item.Quantity);
+            }
+        }
     }
 }
