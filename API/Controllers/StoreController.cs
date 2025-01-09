@@ -55,7 +55,7 @@ namespace API.Controllers
             return NotFound(result.ErrorMessage);
         }
 
-        //[Authorize(Roles = "storeAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpPost]
         [Route("AddStore")]
         public async Task<IActionResult> AddStore([FromBody] AddStoreDTO value)
@@ -75,7 +75,7 @@ namespace API.Controllers
             return BadRequest(result.ErrorMessage);
         }
 
-        //[Authorize(Roles = "storeAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpPut]
         [Route("UpdateStore/{id}")]
         public async Task<IActionResult> UpdateStore(int id, [FromBody] Store value)
@@ -100,7 +100,7 @@ namespace API.Controllers
             return NotFound(result.ErrorMessage);
         }
 
-        //[Authorize(Roles = "storeAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpDelete]
         [Route("DeleteStore/{id}")]
         public async Task<IActionResult> DeleteStoreById(int id)
