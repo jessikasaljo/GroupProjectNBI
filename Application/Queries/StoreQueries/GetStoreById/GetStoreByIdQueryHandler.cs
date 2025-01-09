@@ -45,12 +45,12 @@ namespace Application.Queries.StoreQueries.GetStoreById
 
                 foreach (var item in store.Inventory)
                 {
-                    var product = item.Key;
+                    var product = item;
                     var productDetail = await productDetailRepository.GetFirstOrDefaultAsync(
                         pd => pd.ProductId == product.Id, cancellationToken);
 
                     var fullProductDTO = new FullProductDTO(product, productDetail);
-                    inventory.Add(fullProductDTO, item.Value);
+                    inventory.Add(fullProductDTO, 1); //ÄNDRA DETTA
                 }
 
                 var storeInventoryDTO = new StoreInventoryDTO

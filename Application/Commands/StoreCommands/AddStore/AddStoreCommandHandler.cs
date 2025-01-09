@@ -24,29 +24,14 @@ namespace Application.Commands.StoreCommands.AddStore
                 Location = request.newStore.Location,
             };
 
-            Store? existingStore = null;
-            try
+            Store? existingStore = await Database.GetFirstOrDefaultAsync(s => s.Location == newStore.Location, cancellationToken);
+            if (existingStore != null)
             {
-                existingStore = await Database.GetFirstOrDefaultAsync(s => s.Location == newStore.Location, cancellationToken);
-                if (existingStore != null)
-                {
-                    return OperationResult<string>.FailureResult("Store already exists at this location", logger);
-                }
-            }
-            catch (Exception exception)
-            {
-                return OperationResult<string>.FailureResult($"Error occurred while checking store: {exception.Message}", logger);
+                return OperationResult<string>.FailureResult("Store already exists at this location", logger);
             }
 
-            try
-            {
-                await Database.AddAsync(newStore, cancellationToken);
-                return OperationResult<string>.SuccessResult("Store added successfully", logger);
-            }
-            catch (Exception exception)
-            {
-                return OperationResult<string>.FailureResult($"Error occurred while adding store: {exception.Message}", logger);
-            }
+            await Database.AddAsync(newStore, cancellationToken);
+            return OperationResult<string>.SuccessResult("Store added successfully", logger);
         }
     }
 }

@@ -10,5 +10,12 @@ namespace Infrastructure.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductDetail> ProductDetail { get; set; }  
         public DbSet<Store> Stores { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Store>()
+                .HasIndex(s => s.Location)
+                .IsUnique();
+        }
     }
 }

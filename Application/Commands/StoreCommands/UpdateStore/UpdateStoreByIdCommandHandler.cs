@@ -19,8 +19,6 @@ namespace Application.Commands.StoreCommands.UpdateStore
 
         public async Task<OperationResult<string>> Handle(UpdateStoreByIdCommand request, CancellationToken cancellationToken)
         {
-            Store storeToUpdate = request.UpdatedStore;
-
             try
             {
                 var existingStore = await database.GetFirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
@@ -29,7 +27,10 @@ namespace Application.Commands.StoreCommands.UpdateStore
                     return OperationResult<string>.FailureResult("Store not found", logger);
                 }
 
-                await database.UpdateAsync(storeToUpdate, cancellationToken);
+                existingStore.Location = request.UpdatedStore.Location;
+
+                await database.UpdateAsync(existingStore, cancellationToken);
+
                 return OperationResult<string>.SuccessResult("Store updated successfully", logger);
             }
             catch (Exception exception)
@@ -37,5 +38,6 @@ namespace Application.Commands.StoreCommands.UpdateStore
                 return OperationResult<string>.FailureResult($"Error occurred while updating store: {exception.Message}", logger);
             }
         }
+
     }
 }

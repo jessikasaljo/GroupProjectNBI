@@ -11,7 +11,7 @@ namespace Domain.Models
         [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters.")]
         public required string Location { get; set; }
 
-        //Key value pair where the key is the product and the value is the quantity
-        public List<KeyValuePair<Product, int>> Inventory { get; set; } = new List<KeyValuePair<Product, int>>();
+        //Might modify this later, but made a simple solution to be able to test the Store Crud functionality
+        public ICollection<Product> Inventory { get; set; } = new List<Product>();
     }
 }
