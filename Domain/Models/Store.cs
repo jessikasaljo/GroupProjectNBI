@@ -12,6 +12,6 @@ namespace Domain.Models
         public required string Location { get; set; }
 
         //Key value pair where the key is the product and the value is the quantity
-        public Dictionary<Product, int> Inventory { get; set; } = new Dictionary<Product, int>();
+        public List<KeyValuePair<Product, int>> Inventory { get; set; } = new List<KeyValuePair<Product, int>>();
     }
 }
