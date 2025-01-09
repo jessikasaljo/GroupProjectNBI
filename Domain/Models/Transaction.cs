@@ -13,15 +13,14 @@ namespace Domain.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("CustomerUser")]
-        public int CustomerUserId { get; set; }
-
         [ForeignKey("Store")]
         public int StoreId { get; set; }
 
-        public double Sum { get; set; }
-        public DateTime Date { get; set; }
+        [ForeignKey("Cart")]
+        public int CartId { get; set; }
+        public Cart Cart { get; set; } = null!;
 
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public DateTime TranactionDate { get; set; }
+
     }
 }
