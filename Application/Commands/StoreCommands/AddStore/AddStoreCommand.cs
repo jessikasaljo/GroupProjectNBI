@@ -1,14 +1,16 @@
-﻿using Domain.Models;
+﻿using Application.DTOs.StoreDtos;
+using Application.Helpers;
+using Domain.Models;
 using MediatR;
 
 namespace Application.Commands.StoreCommands.AddStore
 {
-    public class AddStoreCommand : IRequest<Store>
+    public class AddStoreCommand : IRequest<OperationResult<string>>
     {
-        public string Location { get; set; }
-        public AddStoreCommand(string location)
+        public AddStoreDTO newStore { get; set; }
+        public AddStoreCommand(AddStoreDTO storeToAdd)
         {
-            Location = location;
+            newStore = storeToAdd;
         }
     }
 

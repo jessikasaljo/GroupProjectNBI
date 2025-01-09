@@ -1,29 +1,52 @@
-﻿using Domain.Models;
+﻿using Application.Helpers;
+using Domain.Models;
+using Domain.RepositoryInterface;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.StoreCommands.AddStore
 {
-    public class AddStoreCommandHandler : IRequestHandler<AddStoreCommand, Store>
+    public class AddStoreCommandHandler : IRequestHandler<AddStoreCommand, OperationResult<string>>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IGenericRepository<Store> Database;
+        private readonly ILogger<AddStoreCommandHandler> logger;
 
-        public AddStoreCommandHandler(ApplicationDbContext context)
+        public AddStoreCommandHandler(IGenericRepository<Store> _Database, ILogger<AddStoreCommandHandler> _logger)
         {
-            _context = context;
+            Database = _Database;
+            logger = _logger;
         }
 
-        public async Task<Store> Handle(AddStoreCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<string>> Handle(AddStoreCommand request, CancellationToken cancellationToken)
         {
-            var store = new Store { Location = request.Location };
-            _context.Stores.Add(store);
-            await _context.SaveChangesAsync(cancellationToken);
-            return store;
+            var newStore = new Store
+            {
+                Location = request.newStore.Location,
+            };
+
+            Store? existingStore = null;
+            try
+            {
+                existingStore = await Database.GetFirstOrDefaultAsync(s => s.Location == newStore.Location, cancellationToken);
+                if (existingStore != null)
+                {
+                    return OperationResult<string>.FailureResult("Store already exists at this location", logger);
+                }
+            }
+            catch (Exception exception)
+            {
+                return OperationResult<string>.FailureResult($"Error occurred while checking store: {exception.Message}", logger);
+            }
+
+            try
+            {
+                await Database.AddAsync(newStore, cancellationToken);
+                return OperationResult<string>.SuccessResult("Store added successfully", logger);
+            }
+            catch (Exception exception)
+            {
+                return OperationResult<string>.FailureResult($"Error occurred while adding store: {exception.Message}", logger);
+            }
         }
     }
-
 }

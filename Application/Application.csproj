@@ -18,9 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\StoreCommands\DeleteStore\" />
-    <Folder Include="Commands\StoreCommands\UpdateStore\" />
-    <Folder Include="Queries\StoreQueries\" />
     <Folder Include="Validators\" />
     <Folder Include="Queries\CartQueries\" />
   </ItemGroup>

@@ -9,13 +9,9 @@ namespace Domain.Models
 
         [Required(ErrorMessage = "Location is required.")]
         [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters.")]
-        public string Location { get; set; }
+        public required string Location { get; set; }
 
-        public ICollection<Product> Inventory { get; set; } = new List<Product>();
-
-        public Store(string location)
-        {
-            Location = location;
-        }
+        //Key value pair where the key is the product and the value is the quantity
+        public Dictionary<Product, int> Inventory { get; set; } = new Dictionary<Product, int>();
     }
 }
