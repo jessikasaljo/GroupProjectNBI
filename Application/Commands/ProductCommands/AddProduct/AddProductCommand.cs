@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.Product;
 using Application.Helpers;
-using Domain;
 using MediatR;
 
 namespace Application.Commands.ProductCommands.AddProduct
