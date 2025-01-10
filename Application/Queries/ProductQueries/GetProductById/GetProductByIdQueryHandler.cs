@@ -1,8 +1,10 @@
 ﻿using Application.DTOs.Product;
 using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -10,17 +12,21 @@ namespace Application.Queries.ProductQueries.GetProductById
 {
     public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, OperationResult<FullProductDTO?>>
     {
-        private readonly IGenericRepository<Product> Database;
-        private readonly IGenericRepository<ProductDetail> ProductDetailRepository;
+        private readonly IGenericRepository<Product> ProductDatabase;
+        private readonly IGenericRepository<ProductDetail> DetailDatabase;
+        private readonly IGenericRepository<DetailInformation> InformationDatabase;
         private readonly ILogger<GetProductByIdQueryHandler> logger;
         private readonly IMemoryCache memoryCache;
+        private readonly IMapper mapper;
 
-        public GetProductByIdQueryHandler(IGenericRepository<Product> _Database, IGenericRepository<ProductDetail> _DetailDatabase, ILogger<GetProductByIdQueryHandler> _logger, IMemoryCache _memoryCache)
+        public GetProductByIdQueryHandler(IGenericRepository<Product> _ProductDatabase, IGenericRepository<ProductDetail> _DetailDatabase, IGenericRepository<DetailInformation> _InformationDatabase, ILogger<GetProductByIdQueryHandler> _logger, IMemoryCache _memoryCache, IMapper _mapper)
         {
-            Database = _Database;
-            ProductDetailRepository = _DetailDatabase;
+            ProductDatabase = _ProductDatabase;
+            DetailDatabase = _DetailDatabase;
+            InformationDatabase = _InformationDatabase;
             logger = _logger;
             memoryCache = _memoryCache;
+            mapper = _mapper;
         }
 
         public async Task<OperationResult<FullProductDTO?>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
@@ -31,10 +37,17 @@ namespace Application.Queries.ProductQueries.GetProductById
             {
                 if (!memoryCache.TryGetValue(cacheKey, out FullProductDTO? product))
                 {
+                    var productBase = await ProductDatabase.GetByIdAsync(request.Id, cancellationToken);
+                    var productDetails = await DetailDatabase.QueryAsync(
+                        query => query
+                            .Include(pd => pd.DetailInformation)
+                            .Where(detail => detail.ProductId == request.Id),
+                        cancellationToken);
 
-                    var productBase = await Database.GetByIdAsync(request.Id, cancellationToken);
-                    var productDetail = await ProductDetailRepository.GetByIdAsync(request.Id, cancellationToken);
-                    product = new FullProductDTO(productBase, productDetail);
+                    var firstProductDetail = productDetails?.FirstOrDefault();
+
+                    product = mapper.Map<FullProductDTO>(productBase);
+                    product.DetailInformation = firstProductDetail?.DetailInformation.ToList() ?? new List<DetailInformation>();
 
                     if (product != null)
                     {

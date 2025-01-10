@@ -38,13 +38,13 @@ namespace API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid author ID.");
+                return BadRequest("Invalid product ID.");
             }
 
             var result = await mediatr.Send(new GetProductByIdQuery(id));
             if (result == null)
             {
-                return NotFound($"No author found with ID {id}.");
+                return NotFound($"No product found with ID {id}.");
             }
 
             return Ok(result);
@@ -76,13 +76,13 @@ namespace API.Controllers
 
             if (id <= 0)
             {
-                return BadRequest("Invalid author ID.");
+                return BadRequest("Invalid product ID.");
             }
 
             var result = await mediatr.Send(new UpdateProductByIdCommand(value, id));
             if (result == null)
             {
-                return NotFound($"No author found with ID {id}.");
+                return NotFound($"No product found with ID {id}.");
             }
 
             return Ok(result);
@@ -95,13 +95,13 @@ namespace API.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid author ID.");
+                return BadRequest("Invalid product ID.");
             }
 
             var result = await mediatr.Send(new DeleteProductByIdCommand(id));
             if (result == null)
             {
-                return NotFound($"No author found with ID {id}.");
+                return NotFound($"No product found with ID {id}.");
             }
 
             return Ok(result);
