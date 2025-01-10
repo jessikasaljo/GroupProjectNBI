@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.DTOs.Product;
+﻿using Application.DTOs.Product;
 
 namespace Application.DTOs.StoreDtos
 {

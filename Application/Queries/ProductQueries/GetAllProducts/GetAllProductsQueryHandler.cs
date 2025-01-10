@@ -36,7 +36,7 @@ namespace Application.Queries.ProductQueries.GetAllProducts
                 {
                     logger.LogInformation($"Cache hit. Used cached {cacheKey} at {DateTime.UtcNow}");
                 }
-                if(products == null)
+                if (products == null)
                 {
                     return OperationResult<IEnumerable<Product>>.FailureResult("No products found", logger);
                 }

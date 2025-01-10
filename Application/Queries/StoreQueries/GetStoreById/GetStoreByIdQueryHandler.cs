@@ -1,13 +1,13 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.Product;
+using Application.DTOs.StoreDtos;
+using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Caching.Memory;
-using Application.DTOs.StoreDtos;
-using Application.DTOs.Product;
-using AutoMapper;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.StoreQueries.GetStoreById
 {
