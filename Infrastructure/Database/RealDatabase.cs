@@ -8,6 +8,8 @@ namespace Infrastructure.Database
         public RealDatabase(DbContextOptions<RealDatabase> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductDetail> ProductDetail { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
         public DbSet<ProductDetail> ProductDetail { get; set; }  
         public DbSet<Store> Stores { get; set; }
 
@@ -17,5 +19,6 @@ namespace Infrastructure.Database
                 .HasIndex(s => s.Location)
                 .IsUnique();
         }
+
     }
 }
