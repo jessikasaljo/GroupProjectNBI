@@ -10,7 +10,7 @@ namespace Infrastructure.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductDetail> ProductDetail { get; set; }
         public DbSet<DetailInformation> DetailInformation { get; set; }
-
+        public DbSet<Transaction> Transactions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()
@@ -19,5 +19,6 @@ namespace Infrastructure.Database
 
             base.OnModelCreating(modelBuilder);
         }
+
     }
 }
