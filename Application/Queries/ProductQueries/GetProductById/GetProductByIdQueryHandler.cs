@@ -14,16 +14,14 @@ namespace Application.Queries.ProductQueries.GetProductById
     {
         private readonly IGenericRepository<Product> ProductDatabase;
         private readonly IGenericRepository<ProductDetail> DetailDatabase;
-        private readonly IGenericRepository<DetailInformation> InformationDatabase;
         private readonly ILogger<GetProductByIdQueryHandler> logger;
         private readonly IMemoryCache memoryCache;
         private readonly IMapper mapper;
 
-        public GetProductByIdQueryHandler(IGenericRepository<Product> _ProductDatabase, IGenericRepository<ProductDetail> _DetailDatabase, IGenericRepository<DetailInformation> _InformationDatabase, ILogger<GetProductByIdQueryHandler> _logger, IMemoryCache _memoryCache, IMapper _mapper)
+        public GetProductByIdQueryHandler(IGenericRepository<Product> _ProductDatabase, IGenericRepository<ProductDetail> _DetailDatabase, ILogger<GetProductByIdQueryHandler> _logger, IMemoryCache _memoryCache, IMapper _mapper)
         {
             ProductDatabase = _ProductDatabase;
             DetailDatabase = _DetailDatabase;
-            InformationDatabase = _InformationDatabase;
             logger = _logger;
             memoryCache = _memoryCache;
             mapper = _mapper;
