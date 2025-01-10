@@ -9,13 +9,9 @@ namespace Domain.Models
 
         [Required(ErrorMessage = "Location is required.")]
         [StringLength(100, ErrorMessage = "Location cannot exceed 100 characters.")]
-        public string Location { get; set; }
+        public required string Location { get; set; }
 
+        //Might modify this later, but made a simple solution to be able to test the Store Crud functionality
         public ICollection<Product> Inventory { get; set; } = new List<Product>();
-
-        public Store(string location)
-        {
-            Location = location;
-        }
     }
 }
