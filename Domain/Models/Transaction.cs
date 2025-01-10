@@ -20,7 +20,7 @@ namespace Domain.Models
         public int CartId { get; set; }
         public Cart Cart { get; set; } = null!;
 
-        public DateTime TranactionDate { get; set; }
+        public DateTime TransactionDate { get; set; }
 
     }
 }
