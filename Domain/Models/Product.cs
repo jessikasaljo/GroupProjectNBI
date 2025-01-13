@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
 {
@@ -13,6 +14,7 @@ namespace Domain.Models
 
         [Required(ErrorMessage = "Price is required.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than zero.")]
+        //[Column(TypeName = "decimal(18, 2)")] // Specify SQL type
         public decimal Price { get; set; }
     }
 
