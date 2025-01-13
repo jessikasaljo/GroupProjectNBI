@@ -1,6 +1,6 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.StoreDtos;
+using Application.Helpers;
 using MediatR;
-using Application.DTOs.StoreDtos;
 
 namespace Application.Queries.StoreQueries.GetAllStores
 {

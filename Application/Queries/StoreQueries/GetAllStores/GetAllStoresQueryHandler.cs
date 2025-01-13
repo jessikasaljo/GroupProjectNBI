@@ -1,7 +1,7 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.StoreDtos;
+using Application.Helpers;
 using Domain.Models;
 using Domain.RepositoryInterface;
-using Application.DTOs.StoreDtos;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -39,7 +39,10 @@ namespace Application.Queries.StoreQueries.GetAllStores
                 {
                     logger.LogInformation($"Cache hit. Used cached {cacheKey} at {DateTime.UtcNow}");
                 }
-
+                if (stores == null)
+                {
+                    return OperationResult<IEnumerable<StoreDto>>.FailureResult("No stores found", logger);
+                }
                 var storeDtos = stores.Select(store => new StoreDto { Location = store.Location }).ToList();
 
                 return OperationResult<IEnumerable<StoreDto>>.SuccessResult(storeDtos, logger);

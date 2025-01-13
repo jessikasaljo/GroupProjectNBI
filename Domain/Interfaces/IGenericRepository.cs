@@ -13,5 +13,6 @@ namespace Domain.RepositoryInterface
         Task UpdateAsync(T item, CancellationToken cancellationToken);
         Task DeleteAsync(int id, CancellationToken cancellationToken);
         Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
+        Task<IEnumerable<T>?> QueryAsync(Func<IQueryable<T>, IQueryable<T>> query, CancellationToken cancellationToken);
     }
 }

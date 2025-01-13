@@ -73,9 +73,14 @@ namespace API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddApplication();
-            builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection"));
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            if (connectionString == null)
+            {
+                throw new ArgumentNullException("Connection string is null");
+            }
+            builder.Services.AddInfrastructure(connectionString);
             builder.Services.AddMemoryCache();
-
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
 

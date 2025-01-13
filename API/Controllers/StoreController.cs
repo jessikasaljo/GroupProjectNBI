@@ -4,10 +4,10 @@ using Application.Commands.StoreCommands.UpdateStore;
 using Application.DTOs.StoreDtos;
 using Application.Queries.StoreQueries.GetAllStores;
 using Application.Queries.StoreQueries.GetStoreById;
+using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Domain.Models;
 
 namespace API.Controllers
 {

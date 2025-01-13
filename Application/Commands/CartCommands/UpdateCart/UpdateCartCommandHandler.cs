@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Commands.CartCommands.UpdateCart
+﻿namespace Application.Commands.CartCommands.UpdateCart
 {
     internal class UpdateCartCommandHandler
     {

@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.Product;
 using Application.Helpers;
-using Domain.Models;
 using MediatR;
 
 namespace Application.Queries.ProductQueries.GetProductById

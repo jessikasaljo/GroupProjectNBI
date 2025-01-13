@@ -1,11 +1,13 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.Product;
+using Application.DTOs.StoreDtos;
+using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Application.DTOs.StoreDtos;
-using Application.DTOs.Product;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.StoreQueries.GetStoreById
 {
@@ -16,19 +18,22 @@ namespace Application.Queries.StoreQueries.GetStoreById
         private readonly IGenericRepository<ProductDetail> productDetailRepository;
         private readonly ILogger<GetStoreByIdQueryHandler> logger;
         private readonly IMemoryCache memoryCache;
+        private readonly IMapper mapper;
 
         public GetStoreByIdQueryHandler(
             IGenericRepository<Store> _storeRepository,
             IGenericRepository<Product> _productRepository,
             IGenericRepository<ProductDetail> _productDetailRepository,
             ILogger<GetStoreByIdQueryHandler> _logger,
-            IMemoryCache _memoryCache)
+            IMemoryCache _memoryCache,
+            IMapper _mapper)
         {
             storeRepository = _storeRepository;
             productRepository = _productRepository;
             productDetailRepository = _productDetailRepository;
             logger = _logger;
             memoryCache = _memoryCache;
+            mapper = _mapper;
         }
 
         public async Task<OperationResult<StoreInventoryDTO>> Handle(GetStoreByIdQuery request, CancellationToken cancellationToken)
@@ -46,10 +51,14 @@ namespace Application.Queries.StoreQueries.GetStoreById
                 foreach (var item in store.Inventory)
                 {
                     var product = item;
-                    var productDetail = await productDetailRepository.GetFirstOrDefaultAsync(
-                        pd => pd.ProductId == product.Id, cancellationToken);
+                    var productDetails = await productDetailRepository.QueryAsync(
+                          query => query
+                              .Include(pd => pd.DetailInformation)
+                              .Where(detail => detail.ProductId == item.Id),
+                          cancellationToken);
 
-                    var fullProductDTO = new FullProductDTO(product, productDetail);
+                    var fullProductDTO = mapper.Map<FullProductDTO>(product);
+                    fullProductDTO.DetailInformation = productDetails?.FirstOrDefault()?.DetailInformation.ToList() ?? new List<DetailInformation>();
                     inventory.Add(fullProductDTO, 1); //ÄNDRA DETTA
                 }
 

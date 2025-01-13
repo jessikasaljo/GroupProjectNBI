@@ -1,6 +1,5 @@
 ﻿using Application.DTOs.StoreDtos;
 using Application.Helpers;
-using Domain.Models;
 using MediatR;
 
 namespace Application.Commands.StoreCommands.AddStore

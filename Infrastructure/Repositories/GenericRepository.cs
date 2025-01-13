@@ -56,6 +56,11 @@ namespace Infrastructure.Repository
         {
             return await _dbSet.FirstOrDefaultAsync(predicate, cancellationToken); // Pass the cancellationToken to FirstOrDefaultAsync
         }
+
+        public async Task<IEnumerable<T>?> QueryAsync(Func<IQueryable<T>, IQueryable<T>> query, CancellationToken cancellationToken)
+        {
+            return await query(_dbSet).ToListAsync(cancellationToken); // Pass the cancellationToken to ToListAsync
+        }
     }
 
 }
