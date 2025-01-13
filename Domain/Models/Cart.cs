@@ -8,15 +8,13 @@ namespace Domain.Models
         [Key]
         public int Id { get; set; }
 
-        // Foreign key for User
+        [ForeignKey("User")]
         [Required]
         public int UserId { get; set; }
         public User User { get; set; } = null!;
 
-        // List of products in the cart with quantity
         public List<CartItem> Items { get; set; } = new();
 
-        // Calculated field for the total price of the cart
         [NotMapped]
         public decimal TotalPrice
         {

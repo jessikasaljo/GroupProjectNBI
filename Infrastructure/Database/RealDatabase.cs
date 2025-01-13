@@ -12,6 +12,10 @@ namespace Infrastructure.Database
         public DbSet<DetailInformation> DetailInformation { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Store> Stores { get; set; }
+        public DbSet<StoreItem> StoreItems { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()
