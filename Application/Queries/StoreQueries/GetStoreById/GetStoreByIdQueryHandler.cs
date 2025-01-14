@@ -46,9 +46,9 @@ namespace Application.Queries.StoreQueries.GetStoreById
                     return OperationResult<StoreInventoryDTO>.FailureResult("Store not found", logger);
                 }
 
-                var inventory = new Dictionary<FullProductDTO, int>();
+                var inventory = new Dictionary<FullProductDTO, int>(); //STORE ITEM DTO
 
-                foreach (var item in store.Inventory)
+                foreach (var item in store.StoreItems)
                 {
                     var product = item;
                     var productDetails = await productDetailRepository.QueryAsync(
@@ -59,7 +59,7 @@ namespace Application.Queries.StoreQueries.GetStoreById
 
                     var fullProductDTO = mapper.Map<FullProductDTO>(product);
                     fullProductDTO.DetailInformation = productDetails?.FirstOrDefault()?.DetailInformation.ToList() ?? new List<DetailInformation>();
-                    inventory.Add(fullProductDTO, 1); //ÄNDRA DETTA
+                    inventory.Add(fullProductDTO, 1); //ÄNDRA DETTA TILL STORE ITEM
                 }
 
                 var storeInventoryDTO = new StoreInventoryDTO
