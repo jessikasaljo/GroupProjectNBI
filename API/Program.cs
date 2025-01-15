@@ -1,5 +1,7 @@
 using Application;
+using Data;
 using Infrastructure;
+using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -83,6 +85,15 @@ namespace API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
+
+            //Adds seed data to database
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<RealDatabase>();
+                context.Database.EnsureCreated();
+                SeedHelper.Seed(context);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
