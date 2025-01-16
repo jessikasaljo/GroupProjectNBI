@@ -12,7 +12,11 @@ namespace Application.Helpers
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
             CreateMap<Domain.Models.ProductDetail, Application.DTOs.Product.FullProductDTO>()
                 .ForMember(dest => dest.DetailInformation, opt => opt.MapFrom(src => src.DetailInformation ?? new List<Domain.Models.DetailInformation>()));
-
+            CreateMap<Domain.Models.StoreItem, Application.DTOs.StoreItemDtos.FullStoreItemDTO>()
+                .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
+            CreateMap<Domain.Models.Store, Application.DTOs.StoreDtos.StoreDto>()
+                 .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
 
         }
     }

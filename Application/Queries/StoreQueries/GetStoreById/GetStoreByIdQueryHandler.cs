@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Product;
 using Application.DTOs.StoreDtos;
+using Application.DTOs.StoreItemDtos;
 using Application.Helpers;
 using AutoMapper;
 using Domain.Models;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.StoreQueries.GetStoreById
 {
-    public class GetStoreByIdQueryHandler : IRequestHandler<GetStoreByIdQuery, OperationResult<StoreInventoryDTO>>
+    public class GetStoreByIdQueryHandler : IRequestHandler<GetStoreByIdQuery, OperationResult<StoreWithInventoryDTO>>
     {
         private readonly IGenericRepository<Store> storeRepository;
         private readonly IGenericRepository<Product> productRepository;
@@ -36,44 +37,56 @@ namespace Application.Queries.StoreQueries.GetStoreById
             mapper = _mapper;
         }
 
-        public async Task<OperationResult<StoreInventoryDTO>> Handle(GetStoreByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<StoreWithInventoryDTO>> Handle(GetStoreByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
-                var store = await storeRepository.GetByIdAsync(request.Id, cancellationToken);
-                if (store == null)
+                var store = await storeRepository.QueryAsync(
+                    query => query
+                        .Where(s => s.Id == request.Id)
+                        .Include(s => s.StoreItems)
+                        .ThenInclude(si => si.Product),
+                    cancellationToken);
+
+                var storeEntity = store?.FirstOrDefault();
+                if (storeEntity == null)
                 {
-                    return OperationResult<StoreInventoryDTO>.FailureResult("Store not found", logger);
+                    return OperationResult<StoreWithInventoryDTO>.FailureResult("Store not found", logger);
                 }
 
-                var inventory = new Dictionary<FullProductDTO, int>(); //STORE ITEM DTO
+                logger.LogInformation($"Store has {storeEntity.StoreItems.Count} items.");
 
-                foreach (var item in store.StoreItems)
+                var inventory = new List<FullStoreItemDTO>();
+
+                foreach (var item in storeEntity.StoreItems)
                 {
-                    var product = item;
+                    var product = item.Product;
+
                     var productDetails = await productDetailRepository.QueryAsync(
-                          query => query
-                              .Include(pd => pd.DetailInformation)
-                              .Where(detail => detail.ProductId == item.Id),
-                          cancellationToken);
+                        query => query
+                            .Include(pd => pd.DetailInformation)
+                            .Where(detail => detail.ProductId == item.ProductId),
+                        cancellationToken);
 
-                    var fullProductDTO = mapper.Map<FullProductDTO>(product);
-                    fullProductDTO.DetailInformation = productDetails?.FirstOrDefault()?.DetailInformation.ToList() ?? new List<DetailInformation>();
-                    inventory.Add(fullProductDTO, 1); //ÄNDRA DETTA TILL STORE ITEM
+                    var fullStoreItemDTO = mapper.Map<FullStoreItemDTO>(item);
+                    fullStoreItemDTO.Product.DetailInformation = productDetails?.FirstOrDefault()?.DetailInformation.ToList() ?? new List<DetailInformation>();
+                    fullStoreItemDTO.Quantity = item.Quantity;
+                    fullStoreItemDTO.Product.Price = product.Price;
+
+                    inventory.Add(fullStoreItemDTO);
                 }
 
-                var storeInventoryDTO = new StoreInventoryDTO
+                var storeInventoryDTO = new StoreWithInventoryDTO
                 {
-                    Location = store.Location,
+                    Location = storeEntity.Location,
                     Inventory = inventory
-                    //Add price here later
                 };
 
-                return OperationResult<StoreInventoryDTO>.SuccessResult(storeInventoryDTO, logger);
+                return OperationResult<StoreWithInventoryDTO>.SuccessResult(storeInventoryDTO, logger);
             }
             catch (Exception exception)
             {
-                return OperationResult<StoreInventoryDTO>.FailureResult($"Error occurred while fetching store inventory: {exception.Message}", logger);
+                return OperationResult<StoreWithInventoryDTO>.FailureResult($"Error occurred while fetching store inventory: {exception.Message}", logger);
             }
         }
     }
