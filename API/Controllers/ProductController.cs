@@ -1,7 +1,9 @@
 ﻿using Application.Commands.ProductCommands.AddProduct;
 using Application.Commands.ProductCommands.DeleteProduct;
 using Application.Commands.ProductCommands.UpdateProduct;
+using Application.Commands.ProductDetailCommands.AddProductDetail;
 using Application.DTOs.Product;
+using Application.Queries.ProductDetailQueries.GetProductDetailById;
 using Application.Queries.ProductQueries.GetAllProducts;
 using Application.Queries.ProductQueries.GetProductById;
 using Domain.Models;
@@ -99,6 +101,48 @@ namespace API.Controllers
             }
 
             var result = await mediatr.Send(new DeleteProductByIdCommand(id));
+            if (result == null)
+            {
+                return NotFound($"No product found with ID {id}.");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("GetDetail/{id}")]
+        public async Task<IActionResult> GetDetails(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid product ID.");
+            }
+
+            var result = await mediatr.Send(new GetAllProductDetailByIdQuery(id));
+            if (result == null)
+            {
+                return NotFound($"No product found with ID {id}.");
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "productAdmin")]
+        [HttpPost]
+        [Route("AddProductDetail")]
+        public async Task<IActionResult> AddProductDetail(int id, [FromBody] AddProductDetailDTO value)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest("Invalid product ID.");
+            }
+
+            var result = await mediatr.Send(new AddDetailInformationCommand(value));
             if (result == null)
             {
                 return NotFound($"No product found with ID {id}.");

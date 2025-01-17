@@ -14,7 +14,10 @@ namespace Domain.Models
         [Required(ErrorMessage = "Text is required.")]
         [StringLength(500, ErrorMessage = "Text cannot exceed 500 characters.")]
         public string Text { get; set; } = string.Empty;
-        [ForeignKey("ProductDetail")]
-        public int ProductDetailId { get; set; }
+
+        public int ProductId { get; set; }
+
+        [ForeignKey("ProductId")]
+        public ProductDetail ProductDetail { get; set; } = null!;
     }
 }

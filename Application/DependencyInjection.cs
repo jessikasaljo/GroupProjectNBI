@@ -1,5 +1,8 @@
 ﻿using Application.Helpers;
+using Domain.RepositoryInterface;
+using Infrastructure.Repository;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Interfaces;
 
 namespace Application
 {
@@ -10,6 +13,7 @@ namespace Application
             var assembly = typeof(DependencyInjection).Assembly;
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
             services.AddScoped<TokenHelper>();
+            services.AddScoped(typeof(IVerificationService<>), typeof(VerificationService<>));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;

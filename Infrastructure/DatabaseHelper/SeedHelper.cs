@@ -18,6 +18,7 @@ namespace Data
                 db.Users.AddRange(users);
                 db.SaveChanges();
             }
+            var userDict = db.Users.ToDictionary(u => u.UserName);
 
             if (!db.Products.Any())
             {
@@ -29,40 +30,73 @@ namespace Data
                 };
                 db.Products.AddRange(products);
                 db.SaveChanges();
+
+                foreach (var product in products)
+                {
+                    db.ProductDetail.Add(new ProductDetail { Product = product });
+                }
+                db.SaveChanges();
             }
+            var productDict = db.Products.ToDictionary(p => p.Name);
 
             if (!db.Carts.Any())
             {
-                var harry = db.Users.FirstOrDefault(u => u.UserName == "harrypotter");
-                var frodo = db.Users.FirstOrDefault(u => u.UserName == "frodo");
+                var requiredUsers = new[] { "harrypotter", "frodo" };
+
+                foreach (var userName in requiredUsers)
+                {
+                    if (!userDict.ContainsKey(userName))
+                    {
+                        throw new Exception($"User '{userName}' not found.");
+                    }
+                }
+
+                var requiredProducts = new[] { "Apple", "Milk", "Bread" };
+                foreach (var productName in requiredProducts)
+                {
+                    if (!productDict.ContainsKey(productName))
+                    {
+                        throw new Exception($"Product '{productName}' not found.");
+                    }
+                }
 
                 var carts = new List<Cart>
                 {
                     new Cart
                     {
-                        UserId = harry.Id,
+                        UserId = userDict["harrypotter"].Id,
                         Items = new List<CartItem>
                         {
-                            new CartItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Apple").Id, Quantity = 4 },
-                            new CartItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Milk").Id, Quantity = 1 }
+                            new CartItem { ProductId = productDict["Apple"].Id, Quantity = 4 },
+                            new CartItem { ProductId = productDict["Milk"].Id, Quantity = 1 }
                         }
                     },
                     new Cart
                     {
-                        UserId = frodo.Id,
+                        UserId = userDict["frodo"].Id,
                         Items = new List<CartItem>
                         {
-                            new CartItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Milk").Id, Quantity = 2 },
-                            new CartItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Bread").Id, Quantity = 1 }
+                            new CartItem { ProductId = productDict["Milk"].Id, Quantity = 2 },
+                            new CartItem { ProductId = productDict["Bread"].Id, Quantity = 1 }
                         }
                     }
                 };
                 db.Carts.AddRange(carts);
                 db.SaveChanges();
             }
+            var cartDict = db.Carts.ToDictionary(c => c.UserId);
 
             if (!db.Stores.Any())
             {
+                var requiredProducts = new[] { "Apple", "Milk", "Bread" };
+                foreach (var productName in requiredProducts)
+                {
+                    if (!productDict.ContainsKey(productName))
+                    {
+                        throw new Exception($"Product '{productName}' not found.");
+                    }
+                }
+
                 var stores = new List<Store>
                 {
                     new Store
@@ -70,8 +104,8 @@ namespace Data
                         Location = "Enchanted Forest",
                         StoreItems = new List<StoreItem>
                         {
-                            new StoreItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Apple").Id, Quantity = 50 },
-                            new StoreItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Bread").Id, Quantity = 20 }
+                            new StoreItem { ProductId = productDict["Apple"].Id, Quantity = 50 },
+                            new StoreItem { ProductId = productDict["Bread"].Id, Quantity = 20 }
                         }
                     },
                     new Store
@@ -79,22 +113,40 @@ namespace Data
                         Location = "Wonderland",
                         StoreItems = new List<StoreItem>
                         {
-                            new StoreItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Milk").Id, Quantity = 30 },
-                            new StoreItem { ProductId = db.Products.FirstOrDefault(p => p.Name == "Bread").Id, Quantity = 15 }
+                            new StoreItem { ProductId = productDict["Milk"].Id, Quantity = 30 },
+                            new StoreItem { ProductId = productDict["Bread"].Id, Quantity = 15 }
                         }
                     }
                 };
                 db.Stores.AddRange(stores);
                 db.SaveChanges();
             }
+            var storeDict = db.Stores.ToDictionary(s => s.Location);
 
             if (!db.Transactions.Any())
             {
-                var store1 = db.Stores.FirstOrDefault(s => s.Location == "Enchanted Forest");
-                var store2 = db.Stores.FirstOrDefault(s => s.Location == "Wonderland");
+                var requiredStores = new[] { "Enchanted Forest", "Wonderland" };
+                foreach (var storeLocation in requiredStores)
+                {
+                    if (!storeDict.ContainsKey(storeLocation))
+                    {
+                        throw new Exception($"Store '{storeLocation}' not found.");
+                    }
+                }
+                var requiredCarts = new[] { "harrypotter", "frodo" };
+                foreach (var userName in requiredCarts)
+                {
+                    if (!userDict.ContainsKey(userName))
+                    {
+                        throw new Exception($"User '{userName}' not found.");
+                    }
+                }
 
-                var cart1 = db.Carts.FirstOrDefault(c => c.UserId == db.Users.FirstOrDefault(u => u.UserName == "harrypotter").Id);
-                var cart2 = db.Carts.FirstOrDefault(c => c.UserId == db.Users.FirstOrDefault(u => u.UserName == "frodo").Id);
+                var store1 = storeDict["Enchanted Forest"];
+                var store2 = storeDict["Wonderland"];
+
+                var cart1 = cartDict[userDict["harrypotter"].Id];
+                var cart2 = cartDict[userDict["frodo"].Id];
 
                 var transactions = new List<Transaction>
                 {
@@ -104,24 +156,34 @@ namespace Data
                 db.Transactions.AddRange(transactions);
                 db.SaveChanges();
             }
+            var transactionDic = db.Transactions.ToDictionary(t => t.Id);
 
             if (!db.ProductDetail.Any())
             {
+                var requiredProducts = new[] { "Apple", "Milk" };
+                foreach (var productName in requiredProducts)
+                {
+                    if (!productDict.ContainsKey(productName))
+                    {
+                        throw new Exception($"Product '{productName}' not found.");
+                    }
+                }
+
                 var productDetails = new List<ProductDetail>
                 {
                     new ProductDetail
                     {
-                        ProductId = db.Products.FirstOrDefault(p => p.Name == "Apple").Id,
+                        Product = productDict["Apple"],
                         DetailInformation = new List<DetailInformation>
                         {
-                            new DetailInformation { Title = "Description", Text = "Fresh red apple." },
+                            new DetailInformation { Title = "Description", Text = "Fresh red apple."},
                             new DetailInformation { Title = "Nutritional Facts", Text = "Rich in vitamins and antioxidants." },
                             new DetailInformation { Title = "Origin", Text = "Sourced from the magical orchards of the Enchanted Forest." }
                         }
                     },
                     new ProductDetail
                     {
-                        ProductId = db.Products.FirstOrDefault(p => p.Name == "Milk").Id,
+                        Product = productDict["Milk"],
                         DetailInformation = new List<DetailInformation>
                         {
                             new DetailInformation { Title = "Volume", Text = "1 l."},
@@ -130,7 +192,15 @@ namespace Data
                         }
                     }
                 };
-                db.ProductDetail.AddRange(productDetails);
+
+                foreach(var productDetail in productDetails)
+                {
+                    db.ProductDetail.Add(productDetail);
+                    foreach(var detailInformation in productDetail.DetailInformation)
+                    {
+                        db.DetailInformation.Add(detailInformation);
+                    }
+                }
                 db.SaveChanges();
             }
         }
