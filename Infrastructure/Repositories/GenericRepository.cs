@@ -29,6 +29,7 @@ namespace Infrastructure.Repository
         }
         public async Task<IEnumerable<T>> GetPageAsync(int skip, int take, CancellationToken cancellationToken)
         {
+            // Needed to reduce with one
             skip = (skip - 1) * take;
             return await _dbSet.Skip(skip).Take(take).ToListAsync(cancellationToken); // Pass the cancellationToken to ToListAsync
         }
