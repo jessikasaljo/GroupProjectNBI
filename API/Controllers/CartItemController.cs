@@ -1,0 +1,120 @@
+﻿using Application.Commands.CartItemKommands.AddCartItem;
+using Application.Commands.CartItemKommands.DeleteCartItem;
+using Application.Commands.CartItemKommands.UpdateCartItem;
+using Application.DTOs.CartItemDtos;
+using Application.Queries.CartItemQueries.GetAllCartItems;
+using Application.Queries.CartItemQueries.GetCartItemById;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Controllers
+{
+    public class CartItemController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+
+        public CartItemController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        [Route("GetCartItems/{cartId}")]
+        public async Task<IActionResult> GetAllCartItems(int cartId)
+        {
+            if (cartId <= 0)
+            {
+                return BadRequest("Invalid cart ID.");
+            }
+
+            var result = await _mediator.Send(new GetAllCartItemsQuery(cartId));
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+
+        [HttpGet]
+        [Route("GetCartItemById/{id}")]
+        public async Task<IActionResult> GetCartItemById(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid cart item ID.");
+            }
+
+            var result = await _mediator.Send(new GetCartItemByIdQuery(id));
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+
+        [Authorize(Roles = "cartAdmin")]
+        [HttpPost]
+        [Route("AddCartItem")]
+        public async Task<IActionResult> AddCartItem([FromBody] CartItemDTO newItem)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _mediator.Send(new AddCartItemCommand(newItem));
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+
+        [Authorize(Roles = "cartAdmin")]
+        [HttpPut]
+        [Route("UpdateCartItem/{id}")]
+        public async Task<IActionResult> UpdateCartItem(int id, [FromBody] CartItemDTO updatedItem)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest("Invalid cart item ID.");
+            }
+
+            var result = await _mediator.Send(new UpdateCartItemCommand(id, updatedItem));
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+
+        [Authorize(Roles = "cartAdmin")]
+        [HttpDelete]
+        [Route("DeleteCartItem/{id}")]
+        public async Task<IActionResult> DeleteCartItem(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid cart item ID.");
+            }
+
+            var result = await _mediator.Send(new DeleteCartItemCommand(id));
+            if (!result.Success)
+            {
+                return StatusCode(result.StatusCode, result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+    }
+}

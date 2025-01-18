@@ -7,18 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.CartItemQueries.GetAllCartItems
 {
-    public class GetCartItemsQueryHandler : IRequestHandler<GetCartItemsQuery, OperationResult<IEnumerable<CartItemDTO>>>
+    public class GetAllCartItemsQueryHandler : IRequestHandler<GetAllCartItemsQuery, OperationResult<IEnumerable<CartItemDTO>>>
     {
         private readonly IGenericRepository<Cart> _repository;
-        private readonly ILogger<GetCartItemsQueryHandler> _logger;
+        private readonly ILogger<GetAllCartItemsQueryHandler> _logger;
 
-        public GetCartItemsQueryHandler(IGenericRepository<Cart> repository, ILogger<GetCartItemsQueryHandler> logger)
+        public GetAllCartItemsQueryHandler(IGenericRepository<Cart> repository, ILogger<GetAllCartItemsQueryHandler> logger)
         {
             _repository = repository;
             _logger = logger;
         }
         // Testa Git via VS 
-        public async Task<OperationResult<IEnumerable<CartItemDTO>>> Handle(GetCartItemsQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<IEnumerable<CartItemDTO>>> Handle(GetAllCartItemsQuery request, CancellationToken cancellationToken)
         {
             var cart = await _repository.GetFirstOrDefaultAsync(c => c.Id == request.CartId, cancellationToken);
             if (cart == null)

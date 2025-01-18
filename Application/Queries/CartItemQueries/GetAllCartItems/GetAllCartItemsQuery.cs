@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Application.Queries.CartItemQueries.GetAllCartItems
 {
-    public class GetCartItemsQuery : IRequest<OperationResult<IEnumerable<CartItemDTO>>>
+    public class GetAllCartItemsQuery : IRequest<OperationResult<IEnumerable<CartItemDTO>>>
     {
         public int CartId { get; set; }
 
-        public GetCartItemsQuery(int cartId)
+        public GetAllCartItemsQuery(int cartId)
         {
             CartId = cartId;
         }
