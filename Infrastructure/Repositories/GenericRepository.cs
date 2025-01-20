@@ -1,6 +1,8 @@
-﻿using Domain.RepositoryInterface;
+﻿using Azure;
+using Domain.RepositoryInterface;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository
@@ -27,6 +29,8 @@ namespace Infrastructure.Repository
         }
         public async Task<IEnumerable<T>> GetPageAsync(int skip, int take, CancellationToken cancellationToken)
         {
+            // Needed to reduce with one
+            skip = (skip - 1) * take;
             return await _dbSet.Skip(skip).Take(take).ToListAsync(cancellationToken); // Pass the cancellationToken to ToListAsync
         }
 

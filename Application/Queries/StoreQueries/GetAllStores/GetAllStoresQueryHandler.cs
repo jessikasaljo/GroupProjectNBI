@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.StoreDtos;
 using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -13,12 +14,14 @@ namespace Application.Queries.StoreQueries.GetAllStores
         private readonly IGenericRepository<Store> database;
         private readonly ILogger<GetAllStoresQueryHandler> logger;
         private readonly IMemoryCache memoryCache;
+        private readonly IMapper mapper;
 
-        public GetAllStoresQueryHandler(IGenericRepository<Store> _database, ILogger<GetAllStoresQueryHandler> _logger, IMemoryCache _memoryCache)
+        public GetAllStoresQueryHandler(IGenericRepository<Store> _database, ILogger<GetAllStoresQueryHandler> _logger, IMemoryCache _memoryCache, IMapper _mapper)
         {
             database = _database;
             logger = _logger;
             memoryCache = _memoryCache;
+            mapper = _mapper;
         }
 
         public async Task<OperationResult<IEnumerable<StoreDto>>> Handle(GetAllStoresQuery request, CancellationToken cancellationToken)
@@ -39,11 +42,12 @@ namespace Application.Queries.StoreQueries.GetAllStores
                 {
                     logger.LogInformation($"Cache hit. Used cached {cacheKey} at {DateTime.UtcNow}");
                 }
+
                 if (stores == null)
                 {
                     return OperationResult<IEnumerable<StoreDto>>.FailureResult("No stores found", logger);
                 }
-                var storeDtos = stores.Select(store => new StoreDto { Location = store.Location }).ToList();
+                var storeDtos = mapper.Map<IEnumerable<StoreDto>>(stores);
 
                 return OperationResult<IEnumerable<StoreDto>>.SuccessResult(storeDtos, logger);
             }

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Queries.StoreQueries.GetStoreById
 {
-    public class GetStoreByIdQuery : IRequest<OperationResult<StoreInventoryDTO>>
+    public class GetStoreByIdQuery : IRequest<OperationResult<StoreWithInventoryDTO>>
     {
         public int Id { get; set; }
     }
