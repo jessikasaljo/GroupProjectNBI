@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Infrastructure.Database;
+using Microsoft.Extensions.Logging;
 
 namespace Data
 {
@@ -9,10 +10,10 @@ namespace Data
         {
             if (!db.Users.Any())
             {
-                User harry = new User { UserName = "harrypotter", UserPass = "1234", FirstName = "Harry", LastName = "Potter", Email = "harry@hogwarts.com", Phone = "123-456-7890", Address = "4 Privet Drive, Little Whinging, Surrey", Role = UserRole.Customer };
-                User frodo = new User { UserName = "frodo", UserPass = "1234", FirstName = "Frodo", LastName = "Baggins", Email = "frodo@middleearth.com", Phone = "987-654-3210", Address = "Bag End, Hobbiton, The Shire", Role = UserRole.Customer };
-                User belle = new User { UserName = "belle", UserPass = "1234", FirstName = "Belle", LastName = "Beaumont", Email = "belle@disney.com", Role = UserRole.StoreAdmin };
-                User ariel = new User { UserName = "ariel", UserPass = "1234", FirstName = "Ariel", LastName = "Triton", Email = "ariel@disney.com", Address = "Under the Sea, Atlantica", Role = UserRole.ProductAdmin };
+                User harry = new User { UserName = "harrypotter", UserPass = BCrypt.Net.BCrypt.HashPassword("1234"), FirstName = "Harry", LastName = "Potter", Email = "harry@hogwarts.com", Phone = "123-456-7890", Address = "4 Privet Drive, Little Whinging, Surrey", Role = UserRole.Customer };
+                User frodo = new User { UserName = "frodo", UserPass = BCrypt.Net.BCrypt.HashPassword("1234"), FirstName = "Frodo", LastName = "Baggins", Email = "frodo@middleearth.com", Phone = "987-654-3210", Address = "Bag End, Hobbiton, The Shire", Role = UserRole.Customer };
+                User belle = new User { UserName = "belle", UserPass = BCrypt.Net.BCrypt.HashPassword("1234"), FirstName = "Belle", LastName = "Beaumont", Email = "belle@disney.com", Role = UserRole.StoreAdmin };
+                User ariel = new User { UserName = "ariel", UserPass = BCrypt.Net.BCrypt.HashPassword("1234"), FirstName = "Ariel", LastName = "Triton", Email = "ariel@disney.com", Address = "Under the Sea, Atlantica", Role = UserRole.ProductAdmin };
 
                 var users = new List<User> { harry, frodo, belle, ariel };
                 db.Users.AddRange(users);
@@ -156,7 +157,7 @@ namespace Data
                 db.Transactions.AddRange(transactions);
                 db.SaveChanges();
             }
-            var transactionDic = db.Transactions.ToDictionary(t => t.Id);
+            var transactionDict = db.Transactions.ToDictionary(t => t.Id);
 
             if (!db.ProductDetail.Any())
             {
@@ -173,33 +174,37 @@ namespace Data
                 {
                     new ProductDetail
                     {
-                        Product = productDict["Apple"],
-                        DetailInformation = new List<DetailInformation>
-                        {
-                            new DetailInformation { Title = "Description", Text = "Fresh red apple."},
-                            new DetailInformation { Title = "Nutritional Facts", Text = "Rich in vitamins and antioxidants." },
-                            new DetailInformation { Title = "Origin", Text = "Sourced from the magical orchards of the Enchanted Forest." }
-                        }
+                        Product = productDict["Apple"]
                     },
                     new ProductDetail
                     {
-                        Product = productDict["Milk"],
-                        DetailInformation = new List<DetailInformation>
-                        {
-                            new DetailInformation { Title = "Volume", Text = "1 l."},
-                            new DetailInformation { Title = "Nutritional Facts", Text = "High in calcium and protein." },
-                            new DetailInformation { Title = "Storage Instructions", Text = "Keep refrigerated at 4°C." }
-                        }
+                        Product = productDict["Milk"]
                     }
                 };
 
                 foreach(var productDetail in productDetails)
                 {
                     db.ProductDetail.Add(productDetail);
-                    foreach(var detailInformation in productDetail.DetailInformation)
-                    {
-                        db.DetailInformation.Add(detailInformation);
-                    }
+                }
+                db.SaveChanges();
+            }
+            var productDetailDict = db.ProductDetail.ToDictionary(pd => pd.ProductId);
+
+            if (!db.DetailInformation.Any())
+            {
+                var detailInformationList = new List<DetailInformation>
+                {
+                    new DetailInformation { Title = "Description", Text = "Fresh red apple.", ProductDetail = productDetailDict[1] },
+                    new DetailInformation { Title = "Nutritional Facts", Text = "Rich in vitamins and antioxidants.", ProductDetail = productDetailDict[1] },
+                    new DetailInformation { Title = "Origin", Text = "Sourced from the magical orchards of the Enchanted Forest.", ProductDetail = productDetailDict[1] },
+                    new DetailInformation { Title = "Volume", Text = "1 l.", ProductDetail = productDetailDict[2] },
+                    new DetailInformation { Title = "Nutritional Facts", Text = "High in calcium and protein.", ProductDetail = productDetailDict[2] },
+                    new DetailInformation { Title = "Storage Instructions", Text = "Keep refrigerated at 4°C.", ProductDetail = productDetailDict[2] }
+                };
+
+                foreach (var detailInformation in detailInformationList)
+                {
+                    db.DetailInformation.Add(detailInformation);
                 }
                 db.SaveChanges();
             }

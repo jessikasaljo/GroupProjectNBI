@@ -3,6 +3,7 @@ using Application.Queries.ProductDetailQueries.GetProductDetailById;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;

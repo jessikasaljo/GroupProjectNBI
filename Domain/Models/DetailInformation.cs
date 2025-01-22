@@ -18,6 +18,7 @@ namespace Domain.Models
         public int ProductId { get; set; }
 
         [ForeignKey("ProductId")]
+        [System.Text.Json.Serialization.JsonIgnore]
         public ProductDetail ProductDetail { get; set; } = null!;
     }
 }
