@@ -26,5 +26,10 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\StoreItemCommands\" />
+    <Folder Include="Queries\StoreItemQueries\" />
+  </ItemGroup>
 	
 </Project>
