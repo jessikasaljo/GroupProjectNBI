@@ -5,7 +5,6 @@ using Application.DTOs.CartItemDtos;
 using Application.Queries.CartItemQueries.GetAllCartItems;
 using Application.Queries.CartItemQueries.GetCartItemById;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -20,8 +19,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("GetCartItems/{cartId}")]
-        public async Task<IActionResult> GetAllCartItems(int cartId)
+        [Route("GetCartItems")]
+        public async Task<IActionResult> GetAllCartItems([FromHeader] int cartId) 
         {
             if (cartId <= 0)
             {
@@ -55,7 +54,6 @@ namespace API.Controllers
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "cartAdmin")]
         [HttpPost]
         [Route("AddCartItem")]
         public async Task<IActionResult> AddCartItem([FromBody] CartItemDTO newItem)
@@ -74,7 +72,6 @@ namespace API.Controllers
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "cartAdmin")]
         [HttpPut]
         [Route("UpdateCartItem/{id}")]
         public async Task<IActionResult> UpdateCartItem(int id, [FromBody] CartItemDTO updatedItem)
@@ -98,7 +95,6 @@ namespace API.Controllers
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "cartAdmin")]
         [HttpDelete]
         [Route("DeleteCartItem/{id}")]
         public async Task<IActionResult> DeleteCartItem(int id)

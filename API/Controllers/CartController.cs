@@ -5,7 +5,6 @@ using Application.DTOs.CartDtos;
 using Application.Queries.CartQuery.GetAllCarts;
 using Application.Queries.CartQuery.GetCartById;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -32,23 +31,24 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("GetCartById/{id}")]
-        public async Task<IActionResult> GetCartById(int id)
+        [Route("GetCartById")]
+        public async Task<IActionResult> GetCartById([FromHeader] int cartId) 
         {
-            if (id <= 0)
+            if (cartId <= 0)
             {
                 return BadRequest("Invalid cart ID.");
             }
 
-            var result = await _mediator.Send(new GetCartByIdQuery(id));
+            var result = await _mediator.Send(new GetCartByIdQuery(cartId));
             if (!result.Success)
             {
                 return StatusCode(result.StatusCode, result.ErrorMessage);
             }
+
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "cartAdmin")]
+
         [HttpPost]
         [Route("AddCart")]
         public async Task<IActionResult> AddCart([FromBody] CartDTO newCart)
@@ -66,7 +66,6 @@ namespace API.Controllers
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "cartAdmin")]
         [HttpPut]
         [Route("UpdateCart/{id}")]
         public async Task<IActionResult> UpdateCart(int id, [FromBody] CartDTO updatedCart)
@@ -89,7 +88,6 @@ namespace API.Controllers
             return Ok(result.Data);
         }
 
-        [Authorize(Roles = "cartAdmin")]
         [HttpDelete]
         [Route("DeleteCart/{id}")]
         public async Task<IActionResult> DeleteCartById(int id)
