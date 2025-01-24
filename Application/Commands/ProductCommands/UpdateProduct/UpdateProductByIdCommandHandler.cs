@@ -1,4 +1,6 @@
-﻿using Application.Helpers;
+﻿using Application.DTOs.Product;
+using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -10,15 +12,17 @@ namespace Application.Commands.ProductCommands.UpdateProduct
     {
         private readonly IGenericRepository<Product> database;
         private readonly ILogger logger;
-        public UpdateProductByIdCommandHandler(IGenericRepository<Product> _database, ILogger<UpdateProductByIdCommandHandler> _logger)
+        private readonly IMapper mapper;
+        public UpdateProductByIdCommandHandler(IGenericRepository<Product> _database, ILogger<UpdateProductByIdCommandHandler> _logger, IMapper _mapper)
         {
             database = _database;
             logger = _logger;
+            mapper = _mapper;
         }
 
         public async Task<OperationResult<string>> Handle(UpdateProductByIdCommand request, CancellationToken cancellationToken)
         {
-            Product productToUpdate = request.UpdatedProduct;
+            Product productToUpdate = mapper.Map<Product>(request.UpdatedProduct);
 
             try
             {

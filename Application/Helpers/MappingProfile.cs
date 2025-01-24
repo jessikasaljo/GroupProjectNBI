@@ -6,6 +6,9 @@ namespace Application.Helpers
     {
         public MappingProfile()
         {
+            CreateMap<Application.DTOs.Product.ProductDTO, Domain.Models.Product>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
             CreateMap<Domain.Models.Product, Application.DTOs.Product.FullProductDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

@@ -1,5 +1,6 @@
 ﻿using Application.Commands.UserCommands.AddUser;
 using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -12,18 +13,17 @@ namespace Application.Commands.ProductCommands.AddProduct
         private readonly IGenericRepository<Product> productDatabase;
         private readonly IGenericRepository<ProductDetail> detailDatabase;
         private readonly ILogger<AddProductCommandHandler> logger;
-        public AddProductCommandHandler(IGenericRepository<Product> _productDatabase, IGenericRepository<ProductDetail> _detailDatabase, ILogger<AddProductCommandHandler> _logger)
+        private readonly IMapper mapper;
+        public AddProductCommandHandler(IGenericRepository<Product> _productDatabase, IGenericRepository<ProductDetail> _detailDatabase, ILogger<AddProductCommandHandler> _logger, IMapper _mapper)
         {
             productDatabase = _productDatabase;
             detailDatabase = _detailDatabase;
             logger = _logger;
+            mapper = _mapper;
         }
         public async Task<OperationResult<string>> Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
-            var newProduct = new Product
-            {
-                Name = request.newProduct.Name
-            };
+            var newProduct = mapper.Map<Product>(request.newProduct);
 
             Product? existingProduct = null;
             try

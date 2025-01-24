@@ -2,6 +2,8 @@
 using Application.Commands.ProductCommands.DeleteProduct;
 using Application.Commands.ProductCommands.UpdateProduct;
 using Application.Commands.ProductDetailCommands.AddProductDetail;
+using Application.Commands.ProductDetailCommands.DeleteProductDetail;
+using Application.Commands.ProductDetailCommands.UpdateProductDetail;
 using Application.DTOs.Product;
 using Application.Queries.ProductDetailQueries.GetProductDetailById;
 using Application.Queries.ProductQueries.GetAllProducts;
@@ -55,7 +57,7 @@ namespace API.Controllers
         [Authorize(Roles = "productAdmin")]
         [HttpPost]
         [Route("AddProduct")]
-        public async Task<IActionResult> AddProduct([FromBody] AddProductDTO value)
+        public async Task<IActionResult> AddProduct([FromBody] ProductDTO value)
         {
             if (!ModelState.IsValid)
             {
@@ -69,7 +71,7 @@ namespace API.Controllers
         [Authorize(Roles = "productAdmin")]
         [HttpPut]
         [Route("UpdateProduct/{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product value)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDTO value)
         {
             if (!ModelState.IsValid)
             {
@@ -128,9 +130,28 @@ namespace API.Controllers
         }
 
         [Authorize(Roles = "productAdmin")]
+        [HttpGet]
+        [Route("GetProductDetails/{id}")]
+        public async Task<IActionResult> GetProductDetails(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid product ID.");
+            }
+
+            var result = await mediatr.Send(new GetAllProductDetailByIdQuery(id));
+            if (result == null)
+            {
+                return NotFound($"No product found with ID {id}.");
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "productAdmin")]
         [HttpPost]
         [Route("AddProductDetail")]
-        public async Task<IActionResult> AddProductDetail(int id, [FromBody] AddProductDetailDTO value)
+        public async Task<IActionResult> AddProductDetail(int id, [FromBody] ProductDetailDTO value)
         {
             if (!ModelState.IsValid)
             {
@@ -143,6 +164,49 @@ namespace API.Controllers
             }
 
             var result = await mediatr.Send(new AddDetailInformationCommand(value));
+            if (result == null)
+            {
+                return NotFound($"No product found with ID {id}.");
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "productAdmin")]
+        [HttpPut]
+        [Route("UpdateProductDetail/{id}")]
+        public async Task<IActionResult> UpdateProductDetail(int id, [FromBody] ProductDetailDTO value)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id <= 0)
+            {
+                return BadRequest("Invalid product ID.");
+            }
+
+            var result = await mediatr.Send(new UpdateDetailInformationCommand(id, value));
+            if (result == null)
+            {
+                return NotFound($"No product found with ID {id}.");
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "productAdmin")]
+        [HttpDelete]
+        [Route("DeleteProductDetail/{id}")]
+        public async Task<IActionResult> DeleteProductDetail(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid product ID.");
+            }
+
+            var result = await mediatr.Send(new DeleteDetailInformationCommand(id));
             if (result == null)
             {
                 return NotFound($"No product found with ID {id}.");

@@ -11,8 +11,8 @@ namespace Application.Commands.ProductDetailCommands.AddProductDetail
 {
     public class AddDetailInformationCommand : IRequest<OperationResult<string>>
     {
-        public AddProductDetailDTO newProductDetail { get; set; }
-        public AddDetailInformationCommand(AddProductDetailDTO productDetailToAdd)
+        public ProductDetailDTO newProductDetail { get; set; }
+        public AddDetailInformationCommand(ProductDetailDTO productDetailToAdd)
         {
             newProductDetail = productDetailToAdd;
         }

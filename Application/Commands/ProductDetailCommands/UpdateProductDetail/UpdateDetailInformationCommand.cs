@@ -12,8 +12,8 @@ namespace Application.Commands.ProductDetailCommands.UpdateProductDetail
     public class UpdateDetailInformationCommand : IRequest<OperationResult<string>>
     {
         public int detailInformationId { get; set; }
-        public AddProductDetailDTO updatedProductDetail { get; set; }
-        public UpdateDetailInformationCommand(int _detailInformationId, AddProductDetailDTO productDetailToUpdate)
+        public ProductDetailDTO updatedProductDetail { get; set; }
+        public UpdateDetailInformationCommand(int _detailInformationId, ProductDetailDTO productDetailToUpdate)
         {
             detailInformationId = _detailInformationId;
             updatedProductDetail = productDetailToUpdate;

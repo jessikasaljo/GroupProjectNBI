@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Product
 {
-    public class AddProductDetailDTO
+    public class ProductDetailDTO
     {
         [Range(1, int.MaxValue, ErrorMessage = "Invalid product ID.")]
         public required int ProductId { get; set; }

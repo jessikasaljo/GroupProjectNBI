@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Application.Commands.ProductDetailCommands.UpdateProductDetail
 {
@@ -15,11 +16,13 @@ namespace Application.Commands.ProductDetailCommands.UpdateProductDetail
     {
         private readonly IGenericRepository<DetailInformation> detailDatabase;
         private readonly ILogger logger;
+        private readonly IMapper mapper;
 
-        public UpdateDetailInformationCommandHandler(IGenericRepository<DetailInformation> _detailDatabase, ILogger<UpdateDetailInformationCommand> _logger)
+        public UpdateDetailInformationCommandHandler(IGenericRepository<DetailInformation> _detailDatabase, ILogger<UpdateDetailInformationCommand> _logger, IMapper _mapper)
         {
             detailDatabase = _detailDatabase;
             logger = _logger;
+            mapper = _mapper;
         }
 
         public async Task<OperationResult<string>> Handle(UpdateDetailInformationCommand request, CancellationToken cancellationToken)

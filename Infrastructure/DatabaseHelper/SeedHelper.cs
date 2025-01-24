@@ -192,6 +192,9 @@ namespace Data
 
             if (!db.DetailInformation.Any())
             {
+                var firstTargetProduct = db.ProductDetail.FirstOrDefault(pd => pd.ProductId == productDict["Apple"].Id);
+                var secondTargetProduct = db.ProductDetail.FirstOrDefault(pd => pd.ProductId == productDict["Milk"].Id);
+
                 var detailInformationList = new List<DetailInformation>
                 {
                     new DetailInformation { Title = "Description", Text = "Fresh red apple.", ProductDetail = productDetailDict[1] },
