@@ -21,6 +21,17 @@ namespace Infrastructure.Database
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<ProductDetail>()
+                .HasOne(pd => pd.Product)
+                .WithOne(p => p.ProductDetail)
+                .HasForeignKey<ProductDetail>(pd => pd.ProductId);
+
+            modelBuilder.Entity<DetailInformation>()
+                .HasOne(di => di.ProductDetail)
+                .WithMany(pd => pd.DetailInformation)
+                .HasForeignKey(di => di.ProductId);
+
             modelBuilder.Entity<Store>()
                 .HasIndex(s => s.Location)
                 .IsUnique();

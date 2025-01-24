@@ -15,6 +15,6 @@ namespace Domain.Models
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than zero.")]
         //[Column(TypeName = "decimal(18, 2)")] // Specify SQL type
         public decimal Price { get; set; }
+        public ProductDetail ProductDetail { get; set; } = null!;
     }
-
 }

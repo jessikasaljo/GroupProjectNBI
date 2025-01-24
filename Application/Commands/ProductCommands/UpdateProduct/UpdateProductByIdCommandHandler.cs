@@ -1,4 +1,5 @@
 ﻿using Application.Helpers;
+using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -10,16 +11,16 @@ namespace Application.Commands.ProductCommands.UpdateProduct
     {
         private readonly IGenericRepository<Product> database;
         private readonly ILogger logger;
-        public UpdateProductByIdCommandHandler(IGenericRepository<Product> _database, ILogger<UpdateProductByIdCommandHandler> _logger)
+        private readonly IMapper mapper;
+        public UpdateProductByIdCommandHandler(IGenericRepository<Product> _database, ILogger<UpdateProductByIdCommandHandler> _logger, IMapper _mapper)
         {
             database = _database;
             logger = _logger;
+            mapper = _mapper;
         }
 
         public async Task<OperationResult<string>> Handle(UpdateProductByIdCommand request, CancellationToken cancellationToken)
         {
-            Product productToUpdate = request.UpdatedProduct;
-
             try
             {
                 Product? existingProduct = null;
@@ -28,7 +29,9 @@ namespace Application.Commands.ProductCommands.UpdateProduct
                 {
                     return OperationResult<string>.FailureResult("Product not found", logger);
                 }
-                await database.UpdateAsync(productToUpdate, cancellationToken);
+                existingProduct.Name = request.UpdatedProduct.Name;
+                existingProduct.Price = request.UpdatedProduct.Price;
+                await database.UpdateAsync(existingProduct, cancellationToken);
                 return OperationResult<string>.SuccessResult("Product updated successfully", logger);
             }
             catch (Exception exception)

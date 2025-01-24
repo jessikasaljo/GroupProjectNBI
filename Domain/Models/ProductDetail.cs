@@ -5,10 +5,10 @@ namespace Domain.Models
 {
     public class ProductDetail
     {
-        [Key]
-        public int Id { get; set; }
-        [ForeignKey("Product")]
+        [Key, ForeignKey("Product")]
         public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
+        public required Product Product { get; set; }
         public ICollection<DetailInformation> DetailInformation { get; set; } = new List<DetailInformation>();
     }
 }
