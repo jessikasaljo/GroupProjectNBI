@@ -1,6 +1,5 @@
-﻿using Application.Helpers;
-using Domain.Models;
-using Application.DTOs.Product;
+﻿using Application.DTOs.Product;
+using Application.Helpers;
 using MediatR;
 
 namespace Application.Commands.ProductCommands.UpdateProduct

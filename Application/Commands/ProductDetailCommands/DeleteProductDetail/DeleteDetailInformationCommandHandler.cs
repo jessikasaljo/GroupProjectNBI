@@ -1,12 +1,7 @@
-﻿using MediatR;
-using Application.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.RepositoryInterface;
+﻿using Application.Helpers;
 using Domain.Models;
+using Domain.RepositoryInterface;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.ProductDetailCommands.DeleteProductDetail

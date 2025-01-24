@@ -1,5 +1,4 @@
-﻿using Application.Commands.UserCommands.AddUser;
-using Application.Helpers;
+﻿using Application.Helpers;
 using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;

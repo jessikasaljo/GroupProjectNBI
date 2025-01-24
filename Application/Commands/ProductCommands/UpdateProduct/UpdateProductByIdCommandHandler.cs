@@ -1,5 +1,4 @@
-﻿using Application.DTOs.Product;
-using Application.Helpers;
+﻿using Application.Helpers;
 using AutoMapper;
 using Domain.Models;
 using Domain.RepositoryInterface;

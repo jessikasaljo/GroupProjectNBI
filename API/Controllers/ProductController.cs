@@ -8,7 +8,6 @@ using Application.DTOs.Product;
 using Application.Queries.ProductDetailQueries.GetProductDetailById;
 using Application.Queries.ProductQueries.GetAllProducts;
 using Application.Queries.ProductQueries.GetProductById;
-using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

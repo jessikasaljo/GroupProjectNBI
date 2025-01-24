@@ -3,14 +3,8 @@ using Application.Queries.ProductDetailQueries.GetProductDetailById;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Queries.ProductDetailQueries.GetAllProductDetailById
 {

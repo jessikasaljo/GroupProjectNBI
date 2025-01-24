@@ -1,14 +1,9 @@
-﻿using Domain.Models;
+﻿using Application.Helpers;
+using AutoMapper;
+using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Application.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 
 namespace Application.Commands.ProductDetailCommands.UpdateProductDetail
 {

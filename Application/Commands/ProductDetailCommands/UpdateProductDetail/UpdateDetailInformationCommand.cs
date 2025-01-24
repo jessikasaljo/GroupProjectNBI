@@ -1,11 +1,6 @@
-﻿using MediatR;
+﻿using Application.DTOs.Product;
 using Application.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.DTOs.Product;
+using MediatR;
 
 namespace Application.Commands.ProductDetailCommands.UpdateProductDetail
 {

@@ -1,8 +1,6 @@
 ﻿using Application.Helpers;
-using Domain.RepositoryInterface;
-using Infrastructure.Repository;
-using Microsoft.Extensions.DependencyInjection;
 using Application.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
