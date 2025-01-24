@@ -110,28 +110,10 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "productAdmin")]
         [HttpGet]
         [Route("GetDetail/{id}")]
         public async Task<IActionResult> GetDetails(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid product ID.");
-            }
-
-            var result = await mediatr.Send(new GetAllProductDetailByIdQuery(id));
-            if (result == null)
-            {
-                return NotFound($"No product found with ID {id}.");
-            }
-
-            return Ok(result);
-        }
-
-        [Authorize(Roles = "productAdmin")]
-        [HttpGet]
-        [Route("GetProductDetails/{id}")]
-        public async Task<IActionResult> GetProductDetails(int id)
         {
             if (id <= 0)
             {

@@ -21,8 +21,6 @@ namespace Application.Commands.ProductCommands.UpdateProduct
 
         public async Task<OperationResult<string>> Handle(UpdateProductByIdCommand request, CancellationToken cancellationToken)
         {
-            Product productToUpdate = mapper.Map<Product>(request.UpdatedProduct);
-
             try
             {
                 Product? existingProduct = null;
@@ -31,7 +29,9 @@ namespace Application.Commands.ProductCommands.UpdateProduct
                 {
                     return OperationResult<string>.FailureResult("Product not found", logger);
                 }
-                await database.UpdateAsync(productToUpdate, cancellationToken);
+                existingProduct.Name = request.UpdatedProduct.Name;
+                existingProduct.Price = request.UpdatedProduct.Price;
+                await database.UpdateAsync(existingProduct, cancellationToken);
                 return OperationResult<string>.SuccessResult("Product updated successfully", logger);
             }
             catch (Exception exception)
