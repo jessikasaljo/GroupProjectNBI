@@ -1,4 +1,5 @@
 ﻿using Application.Helpers;
+using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
@@ -10,6 +11,7 @@ namespace Application
             var assembly = typeof(DependencyInjection).Assembly;
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
             services.AddScoped<TokenHelper>();
+            services.AddScoped(typeof(IVerificationService<>), typeof(VerificationService<>));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;

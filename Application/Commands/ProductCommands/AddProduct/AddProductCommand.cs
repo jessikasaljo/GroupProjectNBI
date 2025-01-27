@@ -6,8 +6,8 @@ namespace Application.Commands.ProductCommands.AddProduct
 {
     public class AddProductCommand : IRequest<OperationResult<string>>
     {
-        public AddProductDTO newProduct { get; set; }
-        public AddProductCommand(AddProductDTO productToAdd)
+        public ProductDTO newProduct { get; set; }
+        public AddProductCommand(ProductDTO productToAdd)
         {
             newProduct = productToAdd;
         }
