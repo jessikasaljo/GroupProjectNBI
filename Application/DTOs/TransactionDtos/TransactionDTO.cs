@@ -1,17 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Application.DTOs.TransactionDtos
 {
-    public class Transaction
+    public class TransactionDTO
     {
-        [Key]
-        public int Id { get; set; }
         public int StoreId { get; set; }
         [ForeignKey("StoreId")]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Store Store { get; set; } = null!;
         public int CartId { get; set; }
         [ForeignKey("CartId")]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Cart Cart { get; set; } = null!;
         public DateTime TransactionDate { get; set; }
     }
