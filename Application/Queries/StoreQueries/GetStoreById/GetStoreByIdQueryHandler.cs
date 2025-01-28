@@ -1,5 +1,4 @@
-﻿using Application.DTOs.Product;
-using Application.DTOs.StoreDtos;
+﻿using Application.DTOs.StoreDtos;
 using Application.DTOs.StoreItemDtos;
 using Application.Helpers;
 using AutoMapper;
