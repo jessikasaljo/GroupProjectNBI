@@ -1,15 +1,10 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.DTOs.TransactionDtos;
+﻿using Application.DTOs.TransactionDtos;
 using Application.Helpers;
-using Domain.RepositoryInterface;
 using Domain.Models;
-using Microsoft.Extensions.Logging;
+using Domain.RepositoryInterface;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.TransactionQuery
 {

@@ -32,7 +32,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("GetCartById")]
-        public async Task<IActionResult> GetCartById([FromHeader] int cartId) 
+        public async Task<IActionResult> GetCartById([FromHeader] int cartId)
         {
             if (cartId <= 0)
             {
