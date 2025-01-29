@@ -5,6 +5,7 @@ using Application.DTOs.StoreItemDtos;
 using Application.Queries.StoreItemQueries.GetAllStoreItems;
 using Application.Queries.StoreItemQueries.GetStoreItemById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -45,7 +46,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "storeAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpPost]
         [Route("AddStoreItem")]
         public async Task<IActionResult> AddStoreItem([FromBody] AddStoreItemDTO storeItemDto)
@@ -59,7 +60,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "storeAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpPut]
         [Route("UpdateStoreItem/{id}")]
         public async Task<IActionResult> UpdateStoreItem(int id, [FromBody] UpdateStoreItemDTO storeItemDto)
@@ -83,7 +84,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "storeAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpDelete]
         [Route("DeleteStoreItem/{id}")]
         public async Task<IActionResult> DeleteStoreItem(int id)
