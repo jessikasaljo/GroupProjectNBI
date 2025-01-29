@@ -50,7 +50,7 @@ namespace Application.Queries.ProductQueries.GetProductById
                     if (product != null)
                     {
                         memoryCache.Set(cacheKey, product, TimeSpan.FromMinutes(5)); // Cache for 5 minutes
-                        logger.LogInformation("Cache miss. Fetched product with ID {Id} from database and cached at {Timestamp}", request.Id, DateTime.UtcNow);
+                        logger.LogInformation("Cache miss. Fetched product with ID {Id} from storeItemRepository and cached at {Timestamp}", request.Id, DateTime.UtcNow);
                     }
                 }
                 else

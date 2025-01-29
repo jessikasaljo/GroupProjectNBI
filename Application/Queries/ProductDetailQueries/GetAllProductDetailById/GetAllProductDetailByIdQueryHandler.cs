@@ -33,7 +33,7 @@ namespace Application.Queries.ProductDetailQueries.GetAllProductDetailById
                             .Where(detail => detail.ProductId == productId)
                         , cancellationToken);
                     memoryCache.Set(cacheKey, productDetails, TimeSpan.FromMinutes(1));
-                    logger.LogInformation($"Cache miss. Fetched product details for product:{productId} from database and cached at {DateTime.UtcNow}");
+                    logger.LogInformation($"Cache miss. Fetched product details for product:{productId} from storeItemRepository and cached at {DateTime.UtcNow}");
                 }
                 else
                 {
