@@ -7,7 +7,8 @@ namespace Domain.Models
     {
         [Key]
         public int Id { get; set; }
-        public bool Completed = false;
+
+        public bool Completed { get; set; } = false;
 
         [ForeignKey("User")]
         [Required]

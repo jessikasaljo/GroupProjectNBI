@@ -33,6 +33,10 @@ namespace Application.Commands.TransactionCommands.AddTransaction
                 {
                     return OperationResult<string>.FailureResult("Cart not found", logger);
                 }
+                if (targetCart.Completed)
+                {
+                    return OperationResult<string>.FailureResult("Cart already completed", logger);
+                }
                 targetCart.Completed = true;
                 await cartDatabase.UpdateAsync(targetCart, cancellationToken);
                 await transactionDatabase.AddAsync(newTransaction, cancellationToken);
