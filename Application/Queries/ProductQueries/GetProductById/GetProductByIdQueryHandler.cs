@@ -36,6 +36,11 @@ namespace Application.Queries.ProductQueries.GetProductById
                 if (!memoryCache.TryGetValue(cacheKey, out FullProductDTO? product))
                 {
                     var productBase = await ProductDatabase.GetByIdAsync(request.Id, cancellationToken);
+                    if (productBase == null)
+                    {
+                        return OperationResult<FullProductDTO?>.FailureResult("Product not found", logger);
+                    }
+
                     var productDetails = await DetailDatabase.QueryAsync(
                         query => query
                             .Include(pd => pd.DetailInformation)
@@ -71,5 +76,4 @@ namespace Application.Queries.ProductQueries.GetProductById
             }
         }
     }
-
 }

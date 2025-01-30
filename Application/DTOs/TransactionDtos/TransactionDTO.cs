@@ -1,7 +1,4 @@
-﻿using Domain.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Application.DTOs.TransactionDtos
+﻿namespace Application.DTOs.TransactionDtos
 {
     public class TransactionDTO
     {
