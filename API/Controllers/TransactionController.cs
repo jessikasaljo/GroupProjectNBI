@@ -30,7 +30,7 @@ namespace API.Controllers
             return BadRequest(result.ErrorMessage);
         }
 
-        [Authorize(Roles = "transactionAdmin")]
+        [Authorize(Roles = "storeAdmin")]
         [HttpPost]
         [Route("AddTransaction")]
         public async Task<IActionResult> AddTransaction([FromBody] TransactionDTO value)

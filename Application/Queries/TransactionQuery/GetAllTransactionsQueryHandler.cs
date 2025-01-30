@@ -3,6 +3,7 @@ using Application.Helpers;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,20 @@ namespace Application.Queries.TransactionQuery
             {
                 if (!memoryCache.TryGetValue(cacheKey, out IEnumerable<TransactionQueryDTO>? transactions))
                 {
-                    var allTransactions = await transactionDatabase.GetPageAsync(page, size, cancellationToken);
+                    var allTransactions = await transactionDatabase.QueryAsync(
+                        query => query
+                            .Include(t => t.Cart)
+                            .ThenInclude(c => c.User)
+                            .Include(t => t.Cart)
+                            .ThenInclude(c => c.Items)
+                            .ThenInclude(i => i.Product)
+                            .Skip((page-1)*size)
+                            .Take(size),
+                        cancellationToken);
+                    if (allTransactions == null || allTransactions.Count() <= 0)
+                    {
+                        return OperationResult<IEnumerable<TransactionQueryDTO>>.FailureResult("No transactions found", logger);
+                    }
                     transactions = allTransactions.Select(t => new TransactionQueryDTO
                     {
                         UserName = t.Cart.User.UserName,
