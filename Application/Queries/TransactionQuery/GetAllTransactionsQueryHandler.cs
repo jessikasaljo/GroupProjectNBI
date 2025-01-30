@@ -39,7 +39,7 @@ namespace Application.Queries.TransactionQuery
                             .Include(t => t.Cart)
                             .ThenInclude(c => c.Items)
                             .ThenInclude(i => i.Product)
-                            .Skip((page-1)*size)
+                            .Skip((page - 1) * size)
                             .Take(size),
                         cancellationToken);
                     if (allTransactions == null || allTransactions.Count() <= 0)
