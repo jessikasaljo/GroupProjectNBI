@@ -7,12 +7,15 @@ namespace Domain.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [ForeignKey("Store")]
         public int StoreId { get; set; }
-        [ForeignKey("StoreId")]
-        public Store Store { get; set; } = null!;
+
+        [ForeignKey("Cart")]
         public int CartId { get; set; }
-        [ForeignKey("CartId")]
         public Cart Cart { get; set; } = null!;
+
         public DateTime TransactionDate { get; set; }
+
     }
 }

@@ -20,7 +20,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("GetCartItems")]
-        public async Task<IActionResult> GetAllCartItems([FromHeader] int cartId)
+        public async Task<IActionResult> GetAllCartItems([FromHeader] int cartId) 
         {
             if (cartId <= 0)
             {
