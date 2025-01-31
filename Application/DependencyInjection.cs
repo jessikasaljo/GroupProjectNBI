@@ -10,7 +10,7 @@ namespace Application
         {
             var assembly = typeof(DependencyInjection).Assembly;
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
-            services.AddScoped<TokenHelper>();
+            services.AddScoped<ITokenHelper, TokenHelper>();
             services.AddScoped(typeof(IVerificationService<>), typeof(VerificationService<>));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
