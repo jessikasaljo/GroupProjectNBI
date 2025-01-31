@@ -25,8 +25,26 @@ namespace Data
                 {
                     new Product { Name = "Apple", Price = 4.98m },
                     new Product { Name = "Milk", Price = 12.86m },
-                    new Product { Name = "Bread", Price = 29.30m }
+                    new Product { Name = "Bread", Price = 29.30m },
+                    new Product { Name = "Cheese", Price = 45.60m },
+                    new Product { Name = "Orange Juice", Price = 18.75m },
+                    new Product { Name = "Eggs", Price = 22.50m },
+                    new Product { Name = "Cashews", Price = 65.00m },
+                    new Product { Name = "Rice", Price = 15.90m },
+                    new Product { Name = "Pasta", Price = 13.50m },
+                    new Product { Name = "Tomatoes", Price = 9.80m },
+                    new Product { Name = "Potatoes", Price = 7.40m },
+                    new Product { Name = "Onions", Price = 6.20m },
+                    new Product { Name = "Carrots", Price = 8.30m },
+                    new Product { Name = "Spinach", Price = 11.50m },
+                    new Product { Name = "Bourbon Vanilla Paste", Price = 89.99m },
+                    new Product { Name = "Tofu", Price = 20.00m },
+                    new Product { Name = "Butter", Price = 34.20m },
+                    new Product { Name = "Yoghurt", Price = 17.60m },
+                    new Product { Name = "Honey", Price = 25.80m },
+                    new Product { Name = "Coffee", Price = 49.99m }
                 };
+
                 db.Products.AddRange(products);
                 db.SaveChanges();
 
@@ -68,7 +86,9 @@ namespace Data
                         Items = new List<CartItem>
                         {
                             new CartItem { ProductId = db.Products.First(p => p.Name == "Apple").Id, Quantity = 4 },
-                            new CartItem { ProductId = db.Products.First(p => p.Name == "Milk").Id, Quantity = 1 }
+                            new CartItem { ProductId = db.Products.First(p => p.Name == "Tofu").Id, Quantity = 1 },
+                            new CartItem { ProductId = db.Products.First(p => p.Name == "Cheese").Id, Quantity = 2 }
+
                         }
                     },
                     new Cart
@@ -77,7 +97,9 @@ namespace Data
                         Items = new List<CartItem>
                         {
                             new CartItem { ProductId = db.Products.First(p => p.Name == "Milk").Id, Quantity = 2 },
-                            new CartItem { ProductId = db.Products.First(p => p.Name == "Bread").Id, Quantity = 1 }
+                            new CartItem { ProductId = db.Products.First(p => p.Name == "Bread").Id, Quantity = 1 },
+                            new CartItem { ProductId = db.Products.First(p => p.Name == "Honey").Id, Quantity = 1 },
+                            new CartItem { ProductId = db.Products.First(p => p.Name == "Yoghurt").Id, Quantity = 1 }
                         }
                     }
                 });
@@ -91,20 +113,12 @@ namespace Data
                     new Store
                     {
                         Location = "Enchanted Forest",
-                        StoreItems = new List<StoreItem>
-                        {
-                            new StoreItem { ProductId = db.Products.First(p => p.Name == "Apple").Id, Quantity = 50 },
-                            new StoreItem { ProductId = db.Products.First(p => p.Name == "Bread").Id, Quantity = 20 }
-                        }
+                        StoreItems = db.Products.Take(15).Select(p => new StoreItem { ProductId = p.Id, Quantity = 20 }).ToList()
                     },
                     new Store
                     {
                         Location = "Wonderland",
-                        StoreItems = new List<StoreItem>
-                        {
-                            new StoreItem { ProductId = db.Products.First(p => p.Name == "Milk").Id, Quantity = 30 },
-                            new StoreItem { ProductId = db.Products.First(p => p.Name == "Bread").Id, Quantity = 15 }
-                        }
+                        StoreItems = db.Products.Skip(4).Take(15).Select(p => new StoreItem { ProductId = p.Id, Quantity = 20 }).ToList()
                     }
                 });
                 db.SaveChanges();
@@ -132,35 +146,28 @@ namespace Data
 
             if (!db.ProductDetail.Any())
             {
-                db.ProductDetail.AddRange(new List<ProductDetail>
-                {
-                    new ProductDetail { Product = db.Products.First(p => p.Name == "Apple") },
-                    new ProductDetail { Product = db.Products.First(p => p.Name == "Milk") }
-                });
+                var productDetails = db.Products.Select(p => new ProductDetail { Product = p }).ToList();
+                db.ProductDetail.AddRange(productDetails);
                 db.SaveChanges();
             }
 
             if (!db.DetailInformation.Any())
             {
-                var firstTargetProduct = db.ProductDetail.FirstOrDefault(pd => pd.Product.Name == "Apple");
-                var secondTargetProduct = db.ProductDetail.FirstOrDefault(pd => pd.Product.Name == "Milk");
-                if (firstTargetProduct == null || secondTargetProduct == null)
-                {
-                    throw new Exception("Product details not found.");
-                }
+                var productDetails = db.ProductDetail.ToList();
+                var detailInfo = new List<DetailInformation>();
 
-                db.DetailInformation.AddRange(new List<DetailInformation>
+                foreach (var productDetail in productDetails)
                 {
-                    new DetailInformation { Title = "Description", Text = "Fresh red apple.", ProductDetail = firstTargetProduct },
-                    new DetailInformation { Title = "Nutritional Facts", Text = "Rich in vitamins and antioxidants.", ProductDetail = firstTargetProduct },
-                    new DetailInformation { Title = "Origin", Text = "Sourced from the magical orchards of the Enchanted Forest.", ProductDetail = firstTargetProduct },
-                    new DetailInformation { Title = "Volume", Text = "1 l.", ProductDetail = secondTargetProduct },
-                    new DetailInformation { Title = "Nutritional Facts", Text = "High in calcium and protein.", ProductDetail = secondTargetProduct },
-                    new DetailInformation { Title = "Storage Instructions", Text = "Keep refrigerated at 4°C.", ProductDetail = secondTargetProduct }
-                });
+                    detailInfo.AddRange(new List<DetailInformation>
+                    {
+                        new DetailInformation { Title = "Description", Text = $"Premium quality {productDetail.Product.Name}.", ProductDetail = productDetail },
+                        new DetailInformation { Title = "Nutritional Facts", Text = "Packed with essential nutrients.", ProductDetail = productDetail },
+                        new DetailInformation { Title = "Storage Instructions", Text = "Store in a cool, dry place.", ProductDetail = productDetail }
+                    });
+                }
+                db.DetailInformation.AddRange(detailInfo);
                 db.SaveChanges();
             }
         }
-
     }
 }
