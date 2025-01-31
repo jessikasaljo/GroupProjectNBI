@@ -36,7 +36,7 @@ namespace Application.Queries.StoreQueries.GetAllStores
                 {
                     stores = await database.GetPageAsync(page, size, cancellationToken);
                     memoryCache.Set(cacheKey, stores, TimeSpan.FromMinutes(1));
-                    logger.LogInformation($"Cache miss. Fetched stores for page:{page} with size:{size} from database and cached at {DateTime.UtcNow}");
+                    logger.LogInformation($"Cache miss. Fetched stores for page:{page} with size:{size} from storeItemRepository and cached at {DateTime.UtcNow}");
                 }
                 else
                 {

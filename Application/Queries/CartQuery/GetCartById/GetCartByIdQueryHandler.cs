@@ -37,7 +37,7 @@ namespace Application.Queries.CartQuery.GetCartById
                 {
                     carts = await database.GetPageAsync(page, size, cancellationToken);
                     memoryCache.Set(cacheKey, carts, TimeSpan.FromMinutes(1));
-                    logger.LogInformation($"Cache miss. Fetched carts for page:{page} with size:{size} from database and cached at {DateTime.UtcNow}");
+                    logger.LogInformation($"Cache miss. Fetched carts for page:{page} with size:{size} from storeItemRepository and cached at {DateTime.UtcNow}");
                 }
                 else
                 {
