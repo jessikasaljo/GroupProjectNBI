@@ -1,15 +1,10 @@
 ﻿using Application.Commands.UserCommands.AddUser;
 using Application.DTOs.User;
-using Application.Helpers;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Tests.UnitTests.CommandTests.UserCommands
 {

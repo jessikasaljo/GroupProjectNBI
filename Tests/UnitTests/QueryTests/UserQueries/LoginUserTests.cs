@@ -6,9 +6,6 @@ using Domain.RepositoryInterface;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Tests.UnitTests.QueryTests.UserQueries
 {
