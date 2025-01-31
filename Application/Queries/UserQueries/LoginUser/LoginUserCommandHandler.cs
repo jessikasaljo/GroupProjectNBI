@@ -1,4 +1,5 @@
 ﻿using Application.Helpers;
+using Application.Interfaces;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -9,9 +10,9 @@ namespace Application.Queries.UserQueries.LoginUser
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, OperationResult<string>>
     {
         private readonly IGenericRepository<User> database;
-        private readonly TokenHelper tokenHelper;
+        private readonly ITokenHelper tokenHelper;
         private readonly ILogger logger;
-        public LoginUserCommandHandler(IGenericRepository<User> _database, TokenHelper _tokenHelper, ILogger<LoginUserCommandHandler> _logger)
+        public LoginUserCommandHandler(IGenericRepository<User> _database, ITokenHelper _tokenHelper, ILogger<LoginUserCommandHandler> _logger)
         {
             database = _database;
             tokenHelper = _tokenHelper;
@@ -28,7 +29,7 @@ namespace Application.Queries.UserQueries.LoginUser
                 {
                     return OperationResult<string>.FailureResult("User not found", logger);
                 }
-                if (user == null || !BCrypt.Net.BCrypt.Verify(UserPass, user.UserPass))
+                if (!BCrypt.Net.BCrypt.Verify(UserPass, user.UserPass))
                 {
                     return OperationResult<string>.FailureResult("Invalid password", logger);
                 }
