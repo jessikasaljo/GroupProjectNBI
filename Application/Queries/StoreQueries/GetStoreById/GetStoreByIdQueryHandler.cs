@@ -6,7 +6,6 @@ using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.StoreQueries.GetStoreById
@@ -17,7 +16,6 @@ namespace Application.Queries.StoreQueries.GetStoreById
         private readonly IGenericRepository<Product> productRepository;
         private readonly IGenericRepository<ProductDetail> productDetailRepository;
         private readonly ILogger<GetStoreByIdQueryHandler> logger;
-        private readonly IMemoryCache memoryCache;
         private readonly IMapper mapper;
 
         public GetStoreByIdQueryHandler(
@@ -25,14 +23,12 @@ namespace Application.Queries.StoreQueries.GetStoreById
             IGenericRepository<Product> _productRepository,
             IGenericRepository<ProductDetail> _productDetailRepository,
             ILogger<GetStoreByIdQueryHandler> _logger,
-            IMemoryCache _memoryCache,
             IMapper _mapper)
         {
             storeRepository = _storeRepository;
             productRepository = _productRepository;
             productDetailRepository = _productDetailRepository;
             logger = _logger;
-            memoryCache = _memoryCache;
             mapper = _mapper;
         }
 

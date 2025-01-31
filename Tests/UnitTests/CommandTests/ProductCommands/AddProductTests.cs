@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 
-namespace Tests.UnitTests.CommandTests.ProjectCommands
+namespace Tests.UnitTests.CommandTests.ProductCommands
 {
     public class AddProductTests
     {

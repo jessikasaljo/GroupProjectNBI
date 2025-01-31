@@ -43,7 +43,7 @@ namespace Application.Queries.StoreQueries.GetAllStores
                     logger.LogInformation($"Cache hit. Used cached {cacheKey} at {DateTime.UtcNow}");
                 }
 
-                if (stores == null)
+                if (stores == null || !stores.Any())
                 {
                     return OperationResult<IEnumerable<StoreDto>>.FailureResult("No stores found", logger);
                 }
