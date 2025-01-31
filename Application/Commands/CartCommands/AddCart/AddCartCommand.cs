@@ -6,9 +6,9 @@ namespace Application.Commands.CartCommands.AddCart
 {
     public class AddCartCommand : IRequest<OperationResult<string>>
     {
-        public CartDTO NewCart { get; set; }
+        public AddCartDTO NewCart { get; set; }
 
-        public AddCartCommand(CartDTO newCart)
+        public AddCartCommand(AddCartDTO newCart)
         {
             NewCart = newCart;
         }

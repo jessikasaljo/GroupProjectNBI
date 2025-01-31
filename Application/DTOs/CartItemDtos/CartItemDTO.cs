@@ -7,5 +7,6 @@ namespace Application.DTOs.CartItemDtos
         public string ProductName { get; set; } = string.Empty;
         public decimal ProductPrice { get; set; }
         public int Quantity { get; set; }
+        
     }
 }

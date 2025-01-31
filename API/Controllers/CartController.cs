@@ -51,7 +51,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("AddCart")]
-        public async Task<IActionResult> AddCart([FromBody] CartDTO newCart)
+        public async Task<IActionResult> AddCart([FromBody] AddCartDTO newCart)
         {
             if (!ModelState.IsValid)
             {

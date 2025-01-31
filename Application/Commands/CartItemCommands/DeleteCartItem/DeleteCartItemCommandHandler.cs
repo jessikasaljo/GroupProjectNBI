@@ -3,13 +3,8 @@ using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application.Commands.CartItemKommands.DeleteCartItem
+namespace Application.Commands.CartItemCommands.DeleteCartItem
 {
     public class DeleteCartItemCommandHandler : IRequestHandler<DeleteCartItemCommand, OperationResult<string>>
     {

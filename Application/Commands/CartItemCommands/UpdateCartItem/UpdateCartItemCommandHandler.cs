@@ -3,13 +3,8 @@ using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application.Commands.CartItemKommands.UpdateCartItem
+namespace Application.Commands.CartItemCommands.UpdateCartItem
 {
     public class UpdateCartItemCommandHandler : IRequestHandler<UpdateCartItemCommand, OperationResult<string>>
     {
@@ -30,7 +25,7 @@ namespace Application.Commands.CartItemKommands.UpdateCartItem
                 return OperationResult<string>.FailureResult("CartItem not found", _logger);
             }
 
-            existingItem.ProductId = request.UpdatedItem.ProductId;
+            //existingItem.ProductId = request.UpdatedItem.ProductId;
             existingItem.Quantity = request.UpdatedItem.Quantity;
 
             await _repository.UpdateAsync(existingItem, cancellationToken);
