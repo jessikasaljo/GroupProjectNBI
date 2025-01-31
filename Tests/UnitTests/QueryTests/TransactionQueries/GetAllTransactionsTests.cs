@@ -59,14 +59,25 @@ namespace Tests.UnitTests.QueryTests.TransactionQuery
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.True(result.Success);
-            Assert.Equal(transactions.Select(t => new TransactionQueryDTO
-            {
-                UserName = t.Cart.User.UserName,
-                storeId = t.StoreId,
-                cartItems = t.Cart.Items,
-                TransactionDate = t.TransactionDate
-            }), result.Data);
+
+            Assert.Collection(result.Data!,
+                item =>
+                {
+                    Assert.Equal("user1", item.UserName);
+                    Assert.Equal(1, item.storeId);
+                    Assert.Equal(transactions[0].TransactionDate, item.TransactionDate);
+                    Assert.Empty(item.cartItems);
+                },
+                item =>
+                {
+                    Assert.Equal("user2", item.UserName);
+                    Assert.Equal(2, item.storeId);
+                    Assert.Equal(transactions[1].TransactionDate, item.TransactionDate);
+                    Assert.Empty(item.cartItems);
+                }
+            );
         }
+
 
         [Fact]
         public async Task Handle_ShouldReturnFromRepository_WhenNoCacheHitOccurs()
@@ -84,13 +95,22 @@ namespace Tests.UnitTests.QueryTests.TransactionQuery
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.True(result.Success);
-            Assert.Equal(transactions.Select(t => new TransactionQueryDTO
-            {
-                UserName = t.Cart.User.UserName,
-                storeId = t.StoreId,
-                cartItems = t.Cart.Items,
-                TransactionDate = t.TransactionDate
-            }), result.Data);
+            Assert.Collection(result.Data!,
+                item =>
+                {
+                    Assert.Equal("user1", item.UserName);
+                    Assert.Equal(1, item.storeId);
+                    Assert.Equal(transactions[0].TransactionDate, item.TransactionDate);
+                    Assert.Empty(item.cartItems);
+                },
+                item =>
+                {
+                    Assert.Equal("user2", item.UserName);
+                    Assert.Equal(2, item.storeId);
+                    Assert.Equal(transactions[1].TransactionDate, item.TransactionDate);
+                    Assert.Empty(item.cartItems);
+                }
+            );
         }
 
         [Fact]
