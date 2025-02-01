@@ -2,14 +2,14 @@
 using Application.Helpers;
 using MediatR;
 
-namespace Application.Commands.CartItemKommands.UpdateCartItem
+namespace Application.Commands.CartItemCommands.UpdateCartItem
 {
     public class UpdateCartItemCommand : IRequest<OperationResult<string>>
     {
         public int Id { get; set; }
-        public CartItemDTO UpdatedItem { get; set; }
+        public UpdateCartItemDTO UpdatedItem { get; set; }
 
-        public UpdateCartItemCommand(int id, CartItemDTO updatedItem)
+        public UpdateCartItemCommand(int id, UpdateCartItemDTO updatedItem)
         {
             Id = id;
             UpdatedItem = updatedItem;

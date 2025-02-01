@@ -36,5 +36,6 @@ namespace Application.Commands.CartCommands.UpdateCart
             await _database.UpdateAsync(cart, cancellationToken);
             return OperationResult<string>.SuccessResult("Cart updated successfully", _logger);
         }
+
     }
 }

@@ -4,7 +4,7 @@ using Domain.RepositoryInterface;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Commands.CartItemKommands.DeleteCartItem
+namespace Application.Commands.CartItemCommands.DeleteCartItem
 {
     public class DeleteCartItemCommandHandler : IRequestHandler<DeleteCartItemCommand, OperationResult<string>>
     {

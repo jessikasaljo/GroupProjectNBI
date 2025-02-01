@@ -1,7 +1,7 @@
 ﻿using Application.Helpers;
 using MediatR;
 
-namespace Application.Commands.CartItemKommands.DeleteCartItem
+namespace Application.Commands.CartItemCommands.DeleteCartItem
 {
     public class DeleteCartItemCommand : IRequest<OperationResult<string>>
     {

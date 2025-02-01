@@ -3,6 +3,7 @@ using Application.Helpers;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Queries.CartItemQueries.GetAllCartItems
@@ -20,13 +21,21 @@ namespace Application.Queries.CartItemQueries.GetAllCartItems
 
         public async Task<OperationResult<IEnumerable<CartItemDTO>>> Handle(GetAllCartItemsQuery request, CancellationToken cancellationToken)
         {
-            var cart = await _repository.GetFirstOrDefaultAsync(c => c.Id == request.CartId, cancellationToken);
+            //var cart = await _repository.GetFirstOrDefaultAsync(c => c.Id == request.CartId, cancellationToken);
+            var cart = await _repository.QueryAsync(
+                query => query
+                .Include(c => c.Items)
+                   .ThenInclude(i => i.Product)
+                .Where(c => c.Id == request.CartId),
+                cancellationToken
+                );
+
             if (cart == null)
             {
                 return OperationResult<IEnumerable<CartItemDTO>>.FailureResult("Cart not found", _logger);
             }
 
-            var cartItems = cart.Items.Select(item => new CartItemDTO
+            var cartItems = cart.First().Items.Select(item => new CartItemDTO
             {
                 ProductId = item.ProductId,
                 ProductName = item.Product.Name,
