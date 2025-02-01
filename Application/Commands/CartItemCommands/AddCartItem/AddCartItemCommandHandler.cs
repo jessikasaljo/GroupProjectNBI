@@ -1,5 +1,4 @@
-﻿
-using Application.Helpers;
+﻿using Application.Helpers;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;
@@ -10,14 +9,14 @@ namespace Application.Commands.CartItemCommands.AddCartItem
 {
     public class AddCartItemCommandHandler : IRequestHandler<AddCartItemCommand, OperationResult<string>>
     {
-        private readonly IGenericRepository<CartItem> _repository;
         private readonly IGenericRepository<Product> _productRepository;
+        private readonly IGenericRepository<Cart> _cartRepository;
         private readonly ILogger<AddCartItemCommandHandler> _logger;
 
-        public AddCartItemCommandHandler(IGenericRepository<CartItem> repository, IGenericRepository<Product> productRepository, ILogger<AddCartItemCommandHandler> logger)
+        public AddCartItemCommandHandler(IGenericRepository<Product> productRepository, IGenericRepository<Cart> cartRepository, ILogger<AddCartItemCommandHandler> logger)
         {
-            _repository = repository;
             _productRepository = productRepository;
+            _cartRepository = cartRepository;
             _logger = logger;
         }
 
@@ -44,15 +43,24 @@ namespace Application.Commands.CartItemCommands.AddCartItem
                     return OperationResult<string>.FailureResult("Product not found", _logger, 404);
                 }
 
+                var cart = await _cartRepository.GetByIdAsync(request.NewItem.CartId, cancellationToken);
+                if (cart == null)
+                {
+                    _logger.LogWarning("Cart with ID {CartId} not found.", request.NewItem.CartId);
+                    return OperationResult<string>.FailureResult("Cart not found", _logger, 404);
+                }
+
                 var newItem = new CartItem
                 {
                     ProductId = request.NewItem.ProductId,
                     Quantity = request.NewItem.Quantity,
                 };
 
-                await _repository.AddAsync(newItem, cancellationToken);
-                _logger.LogInformation("CartItem added successfully with ProductId: {ProductId}, Quantity: {Quantity}", newItem.ProductId, newItem.Quantity);
+                cart.Items.Add(newItem);
 
+                await _cartRepository.UpdateAsync(cart, cancellationToken);
+
+                _logger.LogInformation("CartItem added successfully to CartId: {CartId} with ProductId: {ProductId}, Quantity: {Quantity}", request.NewItem.CartId, newItem.ProductId, newItem.Quantity);
 
                 return OperationResult<string>.SuccessResult("CartItem added successfully", _logger);
             }
@@ -62,7 +70,6 @@ namespace Application.Commands.CartItemCommands.AddCartItem
                 return OperationResult<string>.FailureResult("An error occurred while processing the request", _logger, 500);
             }
         }
-
     }
 }
 

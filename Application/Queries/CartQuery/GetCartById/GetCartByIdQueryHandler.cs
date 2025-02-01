@@ -1,9 +1,6 @@
-﻿
-
-using Application.DTOs.CartDtos;
+﻿using Application.DTOs.CartDtos;
 using Application.DTOs.CartItemDtos;
 using Application.Helpers;
-using Application.Queries.CartQuery.GetAllCarts;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using MediatR;

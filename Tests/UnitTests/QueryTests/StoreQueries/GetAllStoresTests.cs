@@ -69,8 +69,8 @@ namespace Tests.UnitTests.QueryTests.StoreQueries
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.True(result.Success);
-            Assert.Equal(storeDtos.Count, result.Data.Count());
-            Assert.Equal("New York", result.Data.First().Location);
+            Assert.Equal(storeDtos.Count, result.Data!.Count());
+            Assert.Equal("New York", result.Data!.First().Location);
         }
 
         [Fact]
@@ -122,14 +122,13 @@ namespace Tests.UnitTests.QueryTests.StoreQueries
             _mockMapper.Setup(mapper => mapper.Map<IEnumerable<StoreDto>>(It.IsAny<IEnumerable<Store>>()))
                 .Returns(storeDtos);
 
-            // Simulate a cache hit
             _memoryCache.Set("Stores_p1_s10", stores, TimeSpan.FromMinutes(1));
 
             var result = await _handler.Handle(query, CancellationToken.None);
 
             Assert.True(result.Success);
-            Assert.Equal(storeDtos.Count, result.Data.Count());
-            Assert.Equal("New York", result.Data.First().Location);
+            Assert.Equal(storeDtos.Count, result.Data!.Count());
+            Assert.Equal("New York", result.Data!.First().Location);
             _mockStoreRepo.Verify(repo => repo.GetPageAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 

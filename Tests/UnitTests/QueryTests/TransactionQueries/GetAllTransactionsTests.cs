@@ -1,5 +1,4 @@
-﻿using Application.DTOs.TransactionDtos;
-using Application.Queries.TransactionQuery;
+﻿using Application.Queries.TransactionQuery;
 using Domain.Models;
 using Domain.RepositoryInterface;
 using Microsoft.Extensions.Caching.Memory;

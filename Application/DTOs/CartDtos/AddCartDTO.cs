@@ -1,6 +1,4 @@
-﻿
-using Application.DTOs.CartItemDtos;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.CartDtos
 {
