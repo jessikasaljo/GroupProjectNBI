@@ -1,4 +1,7 @@
-﻿using Application.DTOs.CartItemDtos;
+﻿using Application.Commands.CartItemCommands.AddCartItem;
+using Application.Commands.CartItemCommands.DeleteCartItem;
+using Application.Commands.CartItemCommands.UpdateCartItem;
+using Application.DTOs.CartItemDtos;
 using Application.Queries.CartItemQueries.GetAllCartItems;
 using Application.Queries.CartItemQueries.GetCartItemById;
 using MediatR;
@@ -53,7 +56,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("AddCartItem")]
-        public async Task<IActionResult> AddCartItem([FromBody] CartItemDTO newItem)
+        public async Task<IActionResult> AddCartItem([FromBody] AddCartItemDTO newItem)
         {
             if (!ModelState.IsValid)
             {
@@ -71,7 +74,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("UpdateCartItem/{id}")]
-        public async Task<IActionResult> UpdateCartItem(int id, [FromBody] CartItemDTO updatedItem)
+        public async Task<IActionResult> UpdateCartItem(int id, [FromBody] UpdateCartItemDTO updatedItem)
         {
             if (!ModelState.IsValid)
             {
