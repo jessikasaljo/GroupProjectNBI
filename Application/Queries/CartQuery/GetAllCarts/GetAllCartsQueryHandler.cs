@@ -41,6 +41,11 @@ namespace Application.Queries.CartQuery.GetAllCarts
                     logger.LogInformation($"Cache hit. Used cached {cacheKey} at {DateTime.UtcNow}");
                 }
 
+                if (carts == null || !carts.Any())
+                {
+                    return OperationResult<IEnumerable<CartDTO>>.FailureResult("No carts found", logger);
+                }
+
                 var cartDtos = carts.Select(cart => new CartDTO
                 {
                     Id = cart.Id,

@@ -4,9 +4,6 @@ using Domain.Models;
 using Domain.RepositoryInterface;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Tests.UnitTests.CommandTests.TransactionCommands
 {
