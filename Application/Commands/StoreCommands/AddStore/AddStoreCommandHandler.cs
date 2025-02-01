@@ -19,19 +19,27 @@ namespace Application.Commands.StoreCommands.AddStore
 
         public async Task<OperationResult<string>> Handle(AddStoreCommand request, CancellationToken cancellationToken)
         {
-            var newStore = new Store
+            try
             {
-                Location = request.newStore.Location,
-            };
+                var newStore = new Store
+                {
+                    Location = request.newStore.Location,
+                };
 
-            Store? existingStore = await Database.GetFirstOrDefaultAsync(s => s.Location == newStore.Location, cancellationToken);
-            if (existingStore != null)
-            {
-                return OperationResult<string>.FailureResult("Store already exists at this location", logger);
+                Store? existingStore = await Database.GetFirstOrDefaultAsync(s => s.Location == newStore.Location, cancellationToken);
+                if (existingStore != null)
+                {
+                    return OperationResult<string>.FailureResult("Store already exists at this location", logger);
+                }
+
+                await Database.AddAsync(newStore, cancellationToken);
+                return OperationResult<string>.SuccessResult("Store added successfully", logger);
             }
-
-            await Database.AddAsync(newStore, cancellationToken);
-            return OperationResult<string>.SuccessResult("Store added successfully", logger);
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error occurred while adding store");
+                return OperationResult<string>.FailureResult($"Error occurred while adding store: {ex.Message}", logger);
+            }
         }
     }
 }

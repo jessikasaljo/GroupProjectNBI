@@ -18,7 +18,7 @@ namespace Application.Queries.CartItemQueries.GetAllCartItems
             _repository = repository;
             _logger = logger;
         }
-       
+
         public async Task<OperationResult<IEnumerable<CartItemDTO>>> Handle(GetAllCartItemsQuery request, CancellationToken cancellationToken)
         {
             //var cart = await _repository.GetFirstOrDefaultAsync(c => c.Id == request.CartId, cancellationToken);

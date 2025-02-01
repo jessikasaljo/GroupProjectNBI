@@ -18,6 +18,7 @@ namespace Application.Queries.ProductQueries.GetAllProducts
             logger = _logger;
             memoryCache = _memoryCache;
         }
+
         public async Task<OperationResult<IEnumerable<Product>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
             var page = request.Page;
@@ -30,13 +31,13 @@ namespace Application.Queries.ProductQueries.GetAllProducts
                 {
                     products = await database.GetPageAsync(page, size, cancellationToken);
                     memoryCache.Set(cacheKey, products, TimeSpan.FromMinutes(1));
-                    logger.LogInformation($"Cache miss. Fetched products for page:{page} with size:{size} from database and cached at {DateTime.UtcNow}");
+                    logger.LogInformation($"Cache miss. Fetched products for page:{page} with size:{size} from storeItemRepository and cached at {DateTime.UtcNow}");
                 }
                 else
                 {
                     logger.LogInformation($"Cache hit. Used cached {cacheKey} at {DateTime.UtcNow}");
                 }
-                if (products == null)
+                if (products == null || !products.Any())
                 {
                     return OperationResult<IEnumerable<Product>>.FailureResult("No products found", logger);
                 }

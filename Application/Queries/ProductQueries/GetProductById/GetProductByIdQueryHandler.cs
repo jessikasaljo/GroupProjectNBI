@@ -36,6 +36,11 @@ namespace Application.Queries.ProductQueries.GetProductById
                 if (!memoryCache.TryGetValue(cacheKey, out FullProductDTO? product))
                 {
                     var productBase = await ProductDatabase.GetByIdAsync(request.Id, cancellationToken);
+                    if (productBase == null)
+                    {
+                        return OperationResult<FullProductDTO?>.FailureResult("Product not found", logger);
+                    }
+
                     var productDetails = await DetailDatabase.QueryAsync(
                         query => query
                             .Include(pd => pd.DetailInformation)
@@ -50,7 +55,7 @@ namespace Application.Queries.ProductQueries.GetProductById
                     if (product != null)
                     {
                         memoryCache.Set(cacheKey, product, TimeSpan.FromMinutes(5)); // Cache for 5 minutes
-                        logger.LogInformation("Cache miss. Fetched product with ID {Id} from database and cached at {Timestamp}", request.Id, DateTime.UtcNow);
+                        logger.LogInformation("Cache miss. Fetched product with ID {Id} from storeItemRepository and cached at {Timestamp}", request.Id, DateTime.UtcNow);
                     }
                 }
                 else
@@ -71,5 +76,4 @@ namespace Application.Queries.ProductQueries.GetProductById
             }
         }
     }
-
 }

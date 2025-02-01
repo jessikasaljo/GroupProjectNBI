@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Application.Interfaces;
+using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Application.Helpers
 {
-    public class TokenHelper
+    public class TokenHelper : ITokenHelper
     {
         IConfiguration _configuration;
         public TokenHelper(IConfiguration configuration)
@@ -24,8 +25,6 @@ namespace Application.Helpers
                 UserRole.ProductAdmin => "productAdmin",
                 _ => throw new Exception("Invalid Role")
             };
-
-
 
             var tokenDescripter = new SecurityTokenDescriptor
             {

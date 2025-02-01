@@ -8,6 +8,8 @@ namespace Domain.Models
         [Key]
         public int Id { get; set; }
 
+        public bool Completed { get; set; } = false;
+
         [ForeignKey("User")]
         [Required]
         public int UserId { get; set; }

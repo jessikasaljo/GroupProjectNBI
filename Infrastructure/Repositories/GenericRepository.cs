@@ -1,8 +1,6 @@
-﻿using Azure;
-using Domain.RepositoryInterface;
+﻿using Domain.RepositoryInterface;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repository
